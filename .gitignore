@@ -57,6 +57,10 @@ cover/
 
 # Django stuff:
 *.log
+debug.log.3
+debug.log.2
+debug.log.1
+debug.log
 local_settings.py
 db.sqlite3
 db.sqlite3-journal
@@ -119,6 +123,8 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+.env.development
+.development
 
 # Spyder project settings
 .spyderproject

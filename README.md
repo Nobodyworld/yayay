@@ -1817,9 +1817,7 @@ The General Collective is designed to democratize the management of yayay tokens
 53. **Share Success Stories**: User shares their success stories and achievements within the collective to inspire others.
 54. **Participate in Challenges and Competitions**: User engages in challenges and competitions organized by the collective to showcase their skills and solutions.
 55. **Access Learning Resources**: User accesses learning resources and tutorials to improve their skills and knowledge.
-56. **Earn Badges and Recognition**: User earns
-
- badges and recognition for their contributions and achievements.
+56. **Earn Badges and Recognition**: User earns badges and recognition for their contributions and achievements.
 57. **Utilize Advanced Analytics**: User utilizes advanced analytics tools to gain deeper insights into their impact and progress.
 58. **Engage in Peer Reviews**: User participates in peer review processes to evaluate and improve collective contributions.
 59. **Provide Mentorship**: User offers mentorship and guidance to new and less experienced members.

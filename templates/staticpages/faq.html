@@ -1,0 +1,24 @@
+<!-- templates/staticpages/faq.html -->
+{% extends 'base/base_landing.html' %}
+{% block title %}FAQs - YAYAY{% endblock %}
+{% block content %}
+<div class="container mt-3">
+    <h1>Frequently Asked Questions</h1>
+    <div class="accordion" id="accordionExample">
+        {% for faq in faqs %}
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="heading{{ forloop.counter }}">
+                <button class="accordion-button {% if not forloop.first %}collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ forloop.counter }}" aria-expanded="{% if forloop.first %}true{% else %}false{% endif %}" aria-controls="collapse{{ forloop.counter }}">
+                    {{ faq.question }}
+                </button>
+            </h2>
+            <div id="collapse{{ forloop.counter }}" class="accordion-collapse collapse {% if forloop.first %}show{% endif %}" aria-labelledby="heading{{ forloop.counter }}" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                    {{ faq.answer }}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

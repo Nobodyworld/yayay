@@ -1,0 +1,38 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}User Management{% endblock %}
+
+{% block content %}
+<div class="container mt-3">
+    {% if mode == "list" %}
+        <h2>Users List</h2>
+        <ul class="list-group">
+            {% for user in users %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <a href="{% url 'user_detail' user.id %}">{{ user.username }}</a>
+                    </div>
+                    <div>
+                        <a href="{% url 'user_update' user.id %}" class="btn btn-link">Edit</a>
+                        <a href="{% url 'user_delete' user.id %}" class="btn btn-link text-danger">Delete</a>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+        <a href="{% url 'user_create' %}" class="btn btn-primary mt-3">Create New User</a>
+    {% elif mode == "create" %}
+        {% include "snippets/_form.html" with title="Create User" button_text="Create User" %}
+    {% elif mode == "detail" %}
+        {% include "snippets/_detail.html" with object=user %}
+    {% elif mode == "update" %}
+        {% include "snippets/_form.html" with title="Edit User" button_text="Update User" %}
+    {% elif mode == "delete" %}
+        {% include "snippets/_delete.html" with object_name="user" object_list_url="{% url 'user_list' %}" %}
+    {% endif %}
+</div>
+{% endblock content %}
+{% block scripts %}
+    {% include 'snippets/_loading_indicator.html' %}
+    {% include 'snippets/_scripts.html' %}
+{% endblock scripts %}

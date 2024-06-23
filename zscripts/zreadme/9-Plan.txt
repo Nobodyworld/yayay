@@ -1,0 +1,726 @@
+### Project Overview
+
+This project is designed to organize and dynamically manage elements of personal and collective identity, motivation, and capabilities. The core attributes—will, meaning, knowledge, and wisdom—are fundamental and change based on user interactions within the system. Users can create personas, set goals, manage possessions, solve problems, and create artifacts. The system aggregates these elements to form a comprehensive overview of individual and collective contributions.
+
+### Conceptual Framework
+
+#### Fundamental Elements
+
+1. **Will**: The fundamental drive and motivation.
+2. **Meaning**: The purpose derived from will.
+3. **Knowledge**: The information and understanding obtained from meaning.
+4. **Wisdom**: The integration and deeper insight of will, meaning, and knowledge.
+
+#### Hierarchical Structure
+
+##### User/Collectives
+- **User**: The private version of a person encompassing all personal elements. This information is visible only to the user, who can choose what to display publicly.
+- **Collectives**: Aggregated collections of users' contributions and shared elements.
+
+##### Collective Individual
+- **Collective Individual**: A public version of a person derived from the aggregation of their public personas and contributions.
+
+### Elements of the Hierarchy
+
+1. **Collective Individual**
+    - Aggregated public persona based on contributions and shared collections.
+
+2. **Personas**
+    - Representations of the user, either private (individual) or public (collective).
+
+3. **Perspective**
+    - User's viewpoint and interpretation.
+
+4. **Understanding**
+    - Comprehension and interpretation of knowledge.
+
+5. **Goals**
+    - Objectives and aspirations, both private (individual) and collective (shared with others).
+
+6. **Possessions**
+    - Physical and digital assets, including tools.
+
+7. **Problems**
+    - Challenges and issues faced by individuals and collectives.
+
+8. **Solutions**
+    - Methods and tools to address problems.
+
+9. **Artifacts**
+    - Items created from the combination of tools, problems, and solutions.
+
+10. **Qualities**
+    - Attributes, traits, virtues, skills, and knowledge.
+
+11. **Quantities**
+    - Measurable aspects of the above elements.
+
+### Hierarchical Containment and Relationships
+
+- **Goals** can contain:
+  - Possessions
+  - Problems
+  - Solutions
+  - Artifacts
+  - Qualities
+  - Quantities
+
+- **Possessions** can contain:
+  - Problems
+  - Solutions
+  - Artifacts
+  - Qualities
+  - Quantities
+
+- **Problems** can contain:
+  - Solutions
+  - Artifacts
+  - Qualities
+  - Quantities
+
+- **Solutions** can contain:
+  - Artifacts
+  - Qualities
+  - Quantities
+
+- **Artifacts** can contain:
+  - Qualities
+  - Quantities
+
+- **Qualities** can contain:
+  - Quantities
+
+## Dynamic Attribute Management
+
+Attributes (will, meaning, knowledge,
+
+ wisdom) change dynamically based on interactions within the system. For instance, completing a goal or solving a problem can increase will and meaning, while acquiring new knowledge or creating artifacts can enhance knowledge and wisdom.
+
+### Visualization
+
+- **Donut Graphs**: Visual representations always displaying the user's overall attributes. When a persona is selected, it shows the attributes specific to that persona.
+
+### Skill Badges
+
+Skill badges are earned based on understanding and achievements within specific personas. These metrics are both quantitative and qualitative.
+
+## Updated Template Structure
+
+The template setup follows a clear structure where each app has a single HTML file handling all the logic and includes the necessary snippets and base templates.
+
+### base/
+- `base.html`
+- `base_admin.html`
+- `base_card.html`
+- `base_create.html`
+- `base_dashboard.html`
+- `base_delete.html`
+- `base_detail.html`
+- `base_generic.html`
+- `base_landing.html`
+- `base_list.html`
+
+### components/
+- `_button.html`
+- `_notifications.html`
+- `_pagination.html`
+- `_searchform.html`
+- `_tabs.html`
+
+### includes/
+- `_breadcrumb.html`
+- `_footer.html`
+- `_head.html`
+- `_header.html`
+- `_navbar.html`
+
+### snippets/
+- `_delete.html`
+- `_detail.html`
+- `_form.html`
+- `_loading_indicator.html`
+- `_preloader.html`
+- `_scripts.html`
+
+### Specific Templates:
+
+#### app/
+- `all_feed.html`
+- `artifacts.html`
+- `collectives.html`
+- `content.html`
+- `goals.html`
+- `home.html`
+- `knowledge.html`
+- `leveling.html`
+- `metrics.html`
+- `personas.html`
+- `perspectives.html`
+- `possessions.html`
+- `problems.html`
+- `prompts.html`
+- `social.html`
+- `solutions.html`
+- `transactions.html`
+- `users.html`
+
+### staticpages/
+- `about.html`
+- `blog.html`
+- `contact.html`
+- `faq.html`
+- `login.html`
+- `pricing.html`
+- `privacy.html`
+- `register.html`
+- `support.html`
+- `terms.html`
+
+### Example Use Case
+
+A user creates a "Mom" persona with goals, possessions, problems, etc. She sets a goal to teach her kids about all the states in the US. As she completes her goal, solves problems, and creates artifacts, her "Mom" persona's will, meaning, knowledge, and wisdom increase. Knowledge and understanding are paired, so as knowledge increases, understanding and associated skills also increase.
+
+### Default Landings and User Experience
+
+To improve user experience:
+1. **Home Page**: Provide a dashboard with an overview of key metrics and recent activities.
+2. **Loading Indicators**: Implement a friendly loading screen that disappears once the content is fully loaded.
+3. **User Guidance**: Add tooltips and contextual help to guide users through their tasks and goals.
+4. **Clear Navigation**: Ensure the navbar and side menus are intuitive and provide quick access to all major sections.
+
+### Detailed User Journey and Steps
+
+#### User Registration
+
+1. **Registration Process**:
+    - **Step 1**: User visits the registration page and provides necessary information (username, email, password).
+    - **Step 2**: User verifies their email address.
+    - **Step 3**: User completes profile setup by providing additional information (name, profile picture, bio).
+    - **Step 4**: User is introduced to the concept of base collectives and joins a base collective of interest.
+    - **Step 5**: User is given the option to create or join user-formed collectives, based on interests or geographic location.
+
+    ```python
+    # core/views.py
+
+    @login_required
+    def register(request):
+        if request.method == 'POST':
+            form = UserRegistrationForm(request.POST)
+            if form.is_valid():
+                user = form.save()
+                send_verification_email(user)
+                return redirect('verify_email')
+        else:
+            form = UserRegistrationForm()
+        return render(request, 'register.html', {'form': form})
+
+    @login_required
+    def complete_profile(request):
+        if request.method == 'POST':
+            form = ProfileCompletionForm(request.POST, request.FILES)
+            if form.is_valid()):
+                profile = form.save(commit=False)
+                profile.user = request.user
+                profile.save()
+                return redirect('join_collective')
+        else:
+            form = ProfileCompletionForm()
+        return render(request, 'complete_profile.html', {'form': form})
+
+    @login_required
+    def join_collective(request):
+        base_collectives = BaseCollective.objects.all()
+        if request.method == 'POST':
+            collective_id = request.POST.get('collective_id')
+            collective = BaseCollective.objects.get(id=collective_id)
+            collective.members.add(request.user)
+            return redirect('dashboard')
+        return render(request, 'join_collective.html', {'base_collectives': base_collectives})
+    ```
+
+#### Setting Goals and Identifying Problems
+
+1. **Goal Setting**:
+    - **Step 1**: User navigates to the goals page.
+    - **Step 2**: User sets personal goals by filling out a form that captures their objectives and aspirations.
+    - **Step 3**: User identifies and documents problems associated with their goals.
+
+    ```python
+    # core/views.py
+
+    @login_required
+    def set_goals(request):
+        if request.method == 'POST':
+            form = GoalsForm(request.POST)
+            if form is_valid()):
+                goals = form.save(commit=False)
+                goals.user = request.user
+                goals.save()
+                return redirect('identify_problems')
+        else:
+            form = GoalsForm()
+        return render(request, 'set_goals.html', {'form': form})
+
+    @login_required
+    def identify_problems(request):
+        if request.method == 'POST'):
+            form = ProblemsForm(request.POST)
+            if form.is_valid()):
+                problem = form.save(commit=False)
+                problem.user = request.user
+                problem.save()
+                return redirect('explore_collective_problems')
+        else:
+            form = ProblemsForm()
+        return render(request, 'identify_problems.html', {'form': form})
+    ```
+
+2. **Exploring Collective Problems**:
+    - **Step 4**: User explores and accesses collective goals and problems, viewing challenges faced by their collectives.
+    - **Step 5**: User can contribute to collective problems by offering insights or solutions.
+
+    ```python
+    @login_required
+    def explore_collective_problems(request):
+        collective_problems = Problem.objects.filter(collective__in=request.user.collectives.all())
+        return render(request, 'explore_collective_problems.html', {'collective_problems': collective_problems})
+    ```
+
+#### Using Tools and Creating Solutions
+
+1. **Tool Utilization**:
+    - **Step 1**: User navigates to the tools page to select from available tools.
+    - **Step 2**: User uses selected tools to develop solutions for their identified problems.
+
+    ```python
+    # core/views.py
+
+    @login_required
+    def use_tools(request):
+        tools = Tool.objects.all()
+        return render(request, 'use_tools.html', {'tools': tools})
+    ```
+
+2. **Solution Creation**:
+    - **Step 3**: User creates solutions for identified problems, filling out a form that captures the details of the solution.
+    - **Step 4**: Solutions are shared within collectives, enabling peer review and collaboration.
+    - **Step 5**: Solutions are rated by peers within the collective, contributing to the user’s reputation and progression.
+
+    ```python
+    @login_required
+    def create_solution(request, problem_id):
+        problem = Problem.objects.get(id=problem_id)
+        if request.method == 'POST'):
+            form = SolutionForm(request.POST)
+            if form.is_valid()):
+                solution = form.save(commit=False)
+                solution.problem = problem
+                solution.save()
+                return redirect('share_solution', solution.id)
+        else:
+            form = SolutionForm()
+        return render(request, 'create_solution.html', {'form': form, 'problem': problem})
+
+    @login_required
+    def share_solution(request, solution_id):
+        solution = Solution.objects.get(id=solution_id)
+        collective = solution.problem.collective
+        collective.solutions.add(solution)
+        return redirect('rate_solution', solution.id)
+
+    @login_required
+    def rate_solution(request, solution_id):
+        solution = Solution.objects.get(id=solution_id)
+        if request.method == 'POST'):
+            rating = request.POST.get('rating')
+            solution.ratings.add(rating)
+            return redirect('dashboard')
+        return render(request, 'rate_solution.html', {'solution': solution})
+    ```
+
+#### Creating Artifacts
+
+1. **Artifact Creation**:
+    - **Step 1**: User combines tools, problems, and solutions to create artifacts.
+    - **Step 2**: User fills out a form to detail the artifact, including its components and purpose.
+    - **Step 3**: Artifacts are listed in the marketplace for sale, where they can be viewed and purchased by other users.
+
+    ```python
+    # core/views.py
+
+    @login_required
+    def create_artifact(request):
+        if request.method == 'POST'):
+            form = ArtifactForm(request.POST, request.FILES)
+            if form is valid()):
+                artifact = form.save(commit=False)
+                artifact.user = request.user
+                artifact.save()
+                return redirect('list_artifact', artifact.id)
+        else:
+            form = ArtifactForm()
+        return render(request, 'create_artifact.html', {'form': form})
+
+    @login_required
+    def list_artifact(request, artifact_id):
+        artifact = Artifact.objects.get(id=artifact_id
+
+)
+        if request.method == 'POST'):
+            price = request.POST.get('price')
+            artifact.price = price
+            artifact.save()
+            return redirect('marketplace')
+        return render(request, 'list_artifact.html', {'artifact': artifact})
+    ```
+
+#### Economic Transactions
+
+1. **Earning Tokens**:
+    - **Step 1**: User earns yayay tokens through the sale of artifacts or contributions to collective projects.
+
+    ```python
+    # core/views.py
+
+    @login_required
+    def earn_tokens(request):
+        transactions = TokenTransaction.objects.filter(user=request.user)
+        return render(request, 'earn_tokens.html', {'transactions': transactions})
+    ```
+
+2. **Purchasing Tokens**:
+    - **Step 2**: User can purchase additional tokens using real currency, filling out a form to specify the amount.
+
+    ```python
+    @login_required
+    def purchase_tokens(request):
+        if request.method == 'POST'):
+            form = TokenPurchaseForm(request.POST)
+            if form is valid()):
+                amount = form.cleaned_data['amount']
+                transaction = TokenTransaction(user=request.user, amount=amount, transaction_type='Purchase')
+                transaction.save()
+                return redirect('dashboard')
+        else:
+            form = TokenPurchaseForm()
+        return render(request, 'purchase_tokens.html', {'form': form})
+    ```
+
+3. **Marketplace Transactions**:
+    - **Step 3**: User can purchase solutions, tools, or artifacts listed in the marketplace using tokens.
+
+    ```python
+    @login_required
+    def marketplace(request):
+        listings = Listing.objects.all()
+        return render(request, 'marketplace.html', {'listings': listings})
+    ```
+
+#### Progression and Influence
+
+1. **User Dashboard**:
+    - **Step 1**: User navigates to their dashboard to view their current tier, ratings, and contributions.
+
+    ```python
+    @login_required
+    def user_dashboard(request):
+        user = request.user
+        tier = Tier.objects.get(user=user)
+        ratings = Rating.objects.filter(user=user)
+        contributions = Contribution.objects.filter(user=user)
+        return render(request, 'dashboard.html', {'tier': tier, 'ratings': ratings, 'contributions': contributions})
+    ```
+
+2. **Voting in Collective Decisions**:
+    - **Step 2**: Higher levels grant users more voting rights in collective decisions, allowing them to influence the direction of the collective.
+
+    ```python
+    @login_required
+    def vote_in_collective(request, collective_id):
+        collective = Collective.objects.get(id=collective_id)
+        if request.method == 'POST'):
+            vote = request.POST.get('vote')
+            collective.votes.add(vote)
+            return redirect('collective_dashboard', collective.id)
+        return render(request, 'vote_in_collective.html', {'collective': collective})
+    ```
+
+### Summary of User Steps
+
+1. **Registration and Profile Setup**: Register, verify email, complete profile, join base and user-formed collectives.
+2. **Goal Setting and Problem Identification**: Set personal goals, identify and document problems associated with goals, access and contribute to collective goals and problems.
+3. **Tool Utilization and Solution Creation**: Use tools, create solutions, share and rate solutions within collectives.
+4. **Artifact Creation and Marketplace Listing**: Create artifacts, list them in the marketplace for sale.
+5. **Economic Transactions**: Earn tokens, purchase solutions, tools, and artifacts.
+6. **Progression and Influence**: Progress through levels, earn ratings, gain voting rights in collective decisions.
+
+By following these detailed steps, users will be guided through the system from registration to becoming active contributors within their collectives, ultimately enabling them to explore and innovate independently.
+
+### Additional Points and Refinements
+
+1. **Interoperability**:
+   - Ensure the system can interact with external platforms and systems for data exchange and tool integration.
+
+2. **User Onboarding**:
+   - Include an onboarding process that guides new users through the initial steps, ensuring they understand how to use the platform effectively.
+
+3. **User Privacy and Security**:
+   - Emphasize the importance of user privacy and data security.
+   - Implement robust security measures to protect user data.
+
+4. **Community Guidelines and Moderation**:
+   - Establish community guidelines to maintain a positive and respectful environment.
+   - Implement moderation tools to manage user behavior and content.
+
+5. **Feedback Mechanism**:
+   - Provide mechanisms for users to give feedback on tools, knowledge, and the overall platform.
+   - Use this feedback to continuously improve the system.
+
+This comprehensive and detailed plan ensures that every aspect of the platform is meticulously designed to support user engagement, collaboration, and growth. By leveraging a structured hierarchy and clear inferential relationships, the system facilitates a seamless integration of individual and collective efforts, fostering a dynamic and evolving ecosystem.
+
+### Plan for the General Collective: Democratic and Transparent Management of Yayay Tokens
+
+The General Collective aims to manage yayay tokens democratically, ensuring transparency, accountability, and decentralization to prevent collusion or corruption. This system is designed to function autonomously while allowing for directive control and the ability to eliminate individual positions, including the creator's, when necessary.
+
+### Key Principles and Structure
+
+1. **Transparency**: All actions, decisions, and transactions within the General Collective are fully transparent and accessible to all members.
+2. **Accountability**: A robust system of checks and balances ensures all members, including those in leadership roles, are held accountable for their actions.
+3. **Democratic Governance**: Decisions are made through a democratic voting process where each member's vote counts.
+4. **Decentralization**: Power is distributed across multiple members to prevent any single point of control.
+5. **Directive Control with Exit Strategy**: The creator retains directive control initially but can relinquish this control seamlessly to the collective.
+
+### Structure of the General Collective
+
+1. **Membership**: All users of the platform are members of the General Collective.
+2. **Base Collectives**: Represent key sectors of the economy and resources, organized according to the North American Industry Classification System (NAICS) top levels.
+3. **Governance Council**: A group of elected representatives from the base collectives responsible for overseeing the management of yayay tokens and ensuring adherence to collective principles.
+4. **Voting System**: A transparent voting mechanism to make decisions regarding the allocation and use of yayay tokens.
+5. **Smart Contracts**: Automated agreements to enforce rules and decisions without manual intervention, ensuring integrity and transparency.
+6. **Auditing Committee**: An independent group responsible for auditing transactions and activities to ensure compliance and prevent misconduct.
+
+### Key Sectors and Base Collectives
+
+Positions within the General Collective are earned through leadership roles in the following base collectives, representing the top levels of the NAICS:
+
+1. **Agriculture, Forestry, Fishing, and Hunting**:
+    - **Sub-Collectives**: Crop Production, Animal Production, Forestry, Logging, Fishing, Hunting, and Trapping.
+
+2. **Mining, Quarrying, and Oil and Gas Extraction**:
+    - **Sub-Collectives**: Oil and Gas Extraction, Mining, Quarrying, Support Activities for Mining.
+
+3. **Utilities**:
+    - **Sub-Collectives**: Electric Power Generation, Natural Gas Distribution, Water, Sewage, and Other Systems.
+
+4. **Construction**:
+    - **Sub-Collectives**: Building Construction, Heavy and Civil Engineering Construction, Specialty Trade Contractors.
+
+5. **Manufacturing**:
+    - **Sub-Collectives**: Food Manufacturing, Beverage and Tobacco Product Manufacturing, Textile Mills, Apparel Manufacturing, Chemical Manufacturing, and more.
+
+6. **Wholesale Trade**:
+    - **Sub-Collectives**: Durable Goods, Nondurable Goods.
+
+7. **Retail Trade**:
+    - **Sub-Collectives**: Motor Vehicle and Parts Dealers, Food and Beverage Stores, Health and Personal Care Stores, and more.
+
+8. **Transportation and Warehousing**:
+    - **Sub-Collectives**: Rail Transportation, Truck Transportation, Air Transportation, Warehousing and Storage.
+
+9. **Information**:
+    - **Sub-Collectives**: Publishing Industries, Motion Picture and Sound Recording Industries, Broadcasting, Telecommunications.
+
+10. **Finance and Insurance**:
+    - **Sub-Collectives**: Credit Intermediation, Securities, Insurance Carriers.
+
+11. **Real Estate and Rental and Leasing**:
+    - **Sub-Collectives**: Real Estate, Rental and Leasing Services.
+
+12. **Professional, Scientific, and Technical Services**:
+    - **Sub-Collectives**: Legal Services, Accounting, Architectural and Engineering Services, Scientific Research.
+
+13. **Management of Companies and Enterprises**:
+    - **Sub-Collectives**: Holding Companies, Corporate, Subsidiary, and Regional Managing Offices.
+
+14. **Administrative and Support and Waste Management and Remediation Services**:
+    - **Sub-Collectives**: Administrative Support, Waste Management, Remediation Services.
+
+15. **Educational Services**:
+    - **Sub-Collectives**: Elementary and Secondary Schools, Colleges and Universities, Professional and Technical Schools.
+
+16. **Health Care and Social Assistance**:
+    - **Sub-Collectives**: Ambulatory Health Care Services, Hospitals, Nursing and Residential Care Facilities, Social Assistance.
+
+17. **Arts, Entertainment, and Recreation**:
+    - **Sub-Collectives**: Performing Arts, Spectator Sports, Museums, Parks, and Recreation.
+
+18. **Accommodation and Food Services**:
+    - **Sub-Collectives**: Accommodation, Food Services and Drinking Places.
+
+19. **Other Services (except Public Administration)**:
+    - **Sub-Collectives**: Repair and Maintenance, Personal and Laundry Services, Religious, Grantmaking, Civic, Professional, and Similar Organizations.
+
+### Special Recognition for Academic and Research Collectives
+
+1. **Academic Collectives**: Dedicated
+
+ to advancing knowledge in fields like mathematics, physics, chemistry, and other scientific disciplines.
+2. **Research Collectives**: Focused on innovative research and development across various domains.
+3. **Support and Funding**: Provide special recognition, honor, respect, loyalty, trust, and funding to researchers in academic and research collectives to foster innovation and development.
+
+### Governance and Voting System
+
+1. **Governance Council**:
+   - Composed of leaders from the base collectives.
+   - Responsible for making strategic decisions, managing the collective’s resources, and ensuring adherence to the collective's principles.
+   - Decisions are made through a majority vote within the council.
+
+2. **Voting System**:
+   - Members submit their votes electronically through a secure and transparent platform.
+   - Each member has an equal vote, ensuring fairness and inclusivity.
+   - Voting results are publicly available to maintain transparency.
+
+3. **Smart Contracts**:
+   - Smart contracts are used to automate the distribution and management of yayay tokens based on collective decisions.
+   - These contracts ensure that rules are enforced without manual intervention, reducing the risk of corruption.
+
+### Directive Control and Exit Strategy
+
+1. **Transition Plan**:
+   - The creator sets up the initial framework and gradually transitions responsibilities to the Governance Council.
+   - A clear timeline and milestones are established for the transition process.
+
+2. **Directive Control Exit Mechanism**:
+   - The creator has the ability to relinquish control at any moment by activating a smart contract that transfers all executive powers to the Governance Council.
+   - This mechanism ensures a smooth and immediate transfer of control without disruption.
+
+3. **Continued Oversight**:
+   - Even after stepping down, the creator can continue to participate as a regular member, contributing to the collective’s goals and activities.
+   - The system ensures that no individual can unilaterally regain control, maintaining the collective’s democratic integrity.
+
+### Auditing and Accountability
+
+1. **Auditing Committee**:
+   - Independent body elected by the members to audit and review transactions and activities.
+   - Ensures transparency and accountability by regularly publishing audit reports.
+   - Has the authority to investigate and recommend actions in case of discrepancies or misconduct.
+
+### Monthly Interval Solution Search
+
+1. **Regular Solution Search**:
+   - Collectives search for solution artifacts to rent on a regular monthly interval.
+   - Solutions can be sourced from other collectives and individual users.
+   - A user-friendly allocation ledger is maintained to track these transactions.
+
+2. **Voting on Solutions**:
+   - The voting system helps implement off-site vocations or services offered on the platform.
+   - Prebuilt solutions are immediately testable for utility and functionality, ensuring they meet collective needs.
+
+### Implementation Steps
+
+1. **Establish the Framework**:
+   - Define the roles, responsibilities, and operating procedures of the General Collective, Governance Council, and Auditing Committee.
+   - Develop the smart contracts and voting platform to ensure transparency and automation.
+
+2. **Initial Elections and Setup**:
+   - Conduct the first election to appoint leaders to the Governance Council and members to the Auditing Committee.
+   - Set up the initial allocation and management protocols for yayay tokens.
+
+3. **Transition of Control**:
+   - Gradually transition responsibilities from the creator to the Governance Council according to the predefined plan.
+   - Activate the smart contract to transfer directive control, ensuring a seamless handover.
+
+4. **Ongoing Operations**:
+   - Regularly review and update the collective’s processes to ensure continued transparency and accountability.
+   - Conduct periodic audits and publish reports to maintain trust and integrity within the collective.
+
+5. **Continuous Improvement**:
+   - Encourage member feedback and participation to continuously improve the system.
+   - Adapt and evolve the collective’s governance model based on lessons learned and changing needs.
+
+The General Collective is designed to democratize the management of yayay tokens, ensuring transparency, accountability, and fairness. By leveraging smart contracts, a democratic voting system, and a robust auditing process, the collective can operate autonomously and prevent collusion or corruption. The structured transition plan ensures that the creator can relinquish control while maintaining the stability and integrity of the system. This approach fosters a thriving and collaborative ecosystem where all members can contribute and benefit equitably.
+
+### Step-by-Step Walkthrough for User Immersion
+
+1. **Visit the Website**: User navigates to the platform's homepage.
+2. **Register for an Account**: User clicks on the "Register" button and fills out the registration form with necessary details (username, email, password).
+3. **Email Verification**: User receives a verification email and clicks the verification link.
+4. **Complete Profile Setup**: User completes their profile by adding personal information such as name, profile picture, and bio.
+5. **Introduction to Base Collectives**: User is introduced to the concept of base collectives through an onboarding tutorial.
+6. **Join a Base Collective**: User selects and joins a base collective that aligns with their interests.
+7. **Create or Join User-formed Collectives**: User has the option to create or join user-formed collectives based on specific interests or geographic location.
+8. **Navigate to Goals Page**: User navigates to the goals page to start setting personal goals.
+9. **Set Personal Goals**: User sets their personal goals by filling out a form detailing their objectives and aspirations.
+10. **Identify Problems**: User identifies and documents problems associated with their goals.
+11. **Explore Collective Goals and Problems**: User explores and accesses goals and problems shared by their collectives.
+12. **Contribute to Collective Problems**: User contributes insights or solutions to collective problems.
+13. **Navigate to Tools Page**: User navigates to the tools page to view available tools.
+14. **Select Tools**: User selects tools that will help them develop solutions to their problems.
+15. **Create Solutions**: User creates solutions for identified problems using the selected tools.
+16. **Share Solutions**: User shares their solutions within the collective for peer review.
+17. **Rate Solutions**: User rates solutions provided by others within the collective.
+18. **Navigate to Artifact Creation Page**: User navigates to the artifact creation page.
+19. **Create Artifacts**: User combines tools, problems, and solutions to create artifacts.
+20. **Detail the Artifact**: User fills out a form detailing the artifact, including components and purpose.
+21. **List Artifacts in Marketplace**: User lists the artifacts in the marketplace for sale.
+22. **Earn Tokens**: User earns yayay tokens through the sale of artifacts or contributions to collective projects.
+23. **Purchase Tokens**: User can purchase additional tokens using real currency if needed.
+24. **Purchase Solutions, Tools, or Artifacts**: User can purchase other solutions, tools, or artifacts listed in the marketplace using tokens.
+25. **Navigate to User Dashboard**: User navigates to their personal dashboard to view progress.
+26. **View Tier and Ratings**: User views their current tier, ratings, and contributions.
+27. **Progress in Levels**: User progresses through levels based on their contributions and activities.
+28. **Gain Voting Rights**: User earns voting rights in collective decisions as they progress through levels.
+29. **Participate in Collective Voting**: User participates in voting on collective decisions.
+30. **Receive Feedback**: User receives feedback on their contributions from peers.
+31. **Provide Feedback**: User provides feedback on tools, knowledge, and platform experience.
+32. **Expand Personal Tools**: User creates and customizes personal tools for problem-solving.
+33. **Expand Collective Tools**: User collaborates with the collective to expand shared tools and resources.
+34. **Access Analytics**: User accesses analytics to understand their personal and collective impact.
+35. **Contribute to Knowledge Base**: User contributes to the collective knowledge base by sharing insights and information.
+36. **Explore External Integrations**: User explores and utilizes external tools and platforms integrated with the system.
+37. **Participate in Community Discussions**: User engages in community discussions and forums.
+38. **Follow Community Guidelines**: User adheres to community guidelines to maintain a respectful environment.
+39. **Report Issues**: User reports any issues or inappropriate behavior through the moderation tools.
+40. **Receive Rewards**: User receives rewards and recognition for significant contributions.
+41. **Join Special Projects**: User joins special projects or initiatives within the collective.
+42. **Attend Workshops and Events**: User participates in workshops and events organized by the collective.
+43. **Mentor New Users**: User mentors new members, helping them navigate the system.
+44. **Customize Profile**: User customizes their profile with additional information and settings.
+45. **Set Privacy Preferences**: User sets privacy preferences to control the visibility of their data.
+46. **Review Personal Progress**: User reviews their personal progress and adjusts goals as needed.
+47. **Collaborate on Large-Scale Solutions**: User collaborates with the collective on large-scale solutions and projects.
+48. **Explore Marketplace Offers**: User regularly explores new offers in the marketplace.
+49. **Optimize Resource Usage**: User optimizes the usage of their resources and tools for maximum impact.
+50. **Contribute to Platform Development**: User provides suggestions and feedback to help improve the overall platform.
+51. **Invite Friends and Colleagues**: User invites friends and colleagues to join the platform.
+52. **Form Sub-Collectives**: User creates or joins sub-collectives within a larger collective to focus on specific interests or projects.
+53. **Share Success Stories**: User shares their success stories and achievements within the collective to inspire others.
+54. **Participate in Challenges and Competitions**: User engages in challenges and competitions organized by the collective to showcase their skills and solutions.
+55. **Access Learning Resources**: User accesses learning resources and tutorials to improve their skills and knowledge.
+56. **Earn Badges and Recognition**: User earns
+
+ badges and recognition for their contributions and achievements.
+57. **Utilize Advanced Analytics**: User utilizes advanced analytics tools to gain deeper insights into their impact and progress.
+58. **Engage in Peer Reviews**: User participates in peer review processes to evaluate and improve collective contributions.
+59. **Provide Mentorship**: User offers mentorship and guidance to new and less experienced members.
+60. **Access Exclusive Content**: User gains access to exclusive content and resources as they progress through levels and earn recognition.
+61. **Collaborate with Experts**: User collaborates with experts and thought leaders within the collective to enhance their projects and solutions.
+62. **Submit Proposals for Collective Projects**: User submits proposals for new collective projects and initiatives.
+63. **Vote on Collective Budgets**: User participates in voting on collective budgets and resource allocation.
+64. **Track Personal and Collective Metrics**: User tracks personal and collective metrics to measure progress and success.
+65. **Participate in Beta Testing**: User participates in beta testing for new features and tools on the platform.
+66. **Join Specialized Interest Groups**: User joins specialized interest groups within the collective to focus on niche topics and projects.
+67. **Access Historical Data and Archives**: User accesses historical data and archives to learn from past projects and initiatives.
+68. **Contribute to Open Source Projects**: User contributes to open source projects and collaborative development efforts within the collective.
+69. **Engage in Cross-Collective Collaborations**: User engages in cross-collective collaborations to work on larger, interdisciplinary projects.
+70. **Create and Share Templates**: User creates and shares templates for tools, solutions, and artifacts with the collective.
+71. **Utilize Advanced Customization Options**: User utilizes advanced customization options to tailor their profile, tools, and solutions to their specific needs.
+72. **Monitor Real-Time Updates**: User monitors real-time updates and notifications to stay informed about collective activities and opportunities.
+73. **Access Mobile and Desktop Apps**: User accesses mobile and desktop applications for seamless interaction with the platform across devices.
+74. **Participate in User Research**: User participates in user research studies to provide feedback and insights for platform improvement.
+75. **Access Support and Help Resources**: User accesses support and help resources for assistance with any issues or questions.
+76. **Utilize AI-Driven Recommendations**: User utilizes AI-driven recommendations for personalized suggestions on tools, solutions, and collaborations.
+77. **Explore Career Development Opportunities**: User explores career development opportunities through the platform’s resources and connections.
+78. **Publish Research and Articles**: User publishes research papers and articles within the collective to share knowledge and insights.
+79. **Engage in Thought Leadership**: User engages in thought leadership activities, such as speaking at events or leading discussions within the collective.
+80. **Leverage Networking Opportunities**: User leverages networking opportunities to connect with other professionals and experts within the collective.

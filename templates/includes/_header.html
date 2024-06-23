@@ -1,0 +1,21 @@
+{% load static %}
+<header class="header-background py-3">
+    <button id="theme-button" class="btn btn-secondary" aria-label="Toggle dark and light themes">Switch Theme</button>
+    {% if user.is_authenticated %}
+    <nav class="navbar navbar-expand-lg navbar-light" aria-label="Primary">
+        <button id="menu-toggle" class="btn btn-outline-secondary" aria-label="Toggle menu visibility">Home</button>
+        <a href="{% url 'home:home' %}" class="navbar-brand" aria-label="Go to homepage">
+            <img src="{% static 'images/common/logo_yay_up_400.png' %}" alt="YAYAY Logo" class="logo">
+        </a>
+        <button id="logout-button" class="btn btn-danger" aria-label="Log out of your account">Logout</button>
+    </nav>
+    {% else %}
+    <nav class="navbar navbar-expand-lg navbar-light" aria-label="Primary">
+        <button id="login-button" class="btn btn-primary" aria-label="Log into your account">Login</button>
+        <a href="{% url 'home:home' %}" class="navbar-brand" aria-label="Go to homepage">
+            <img src="{% static 'images/common/logo_yay_up_400.png' %}" alt="YAYAY Logo" class="logo">
+        </a>
+    </nav>
+    {% endif %}
+    {% include 'includes/_navbar.html' %}
+</header>

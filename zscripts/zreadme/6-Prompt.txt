@@ -1,0 +1,160 @@
+6. **Prompts App:**
+   - **Purpose:** Facilitates various types of user and persona interactions via prompts.
+   - **Includes:** Detailed classifications of prompts such as Conversations, General, Bonus, etc.
+   - **Changes:** Introduce dynamic prompt generation and handling based on user interactions and AI assessments.
+
+
+  ### Overview
+  Prompts serve as dynamic containers for various interactions within the application. They facilitate interactive elements that navigate through different prompt types.
+  Each prompt type is unique in either scope or detail.
+
+  ### Prompt Types
+  1. **Conversations (ID: 100)**
+    - **Description:** Generic conversations or image generations.
+    - **Implementation:** Triggered through a PromptButton initiating the view and value:chat interaction (PersonaPromptView, PersonaChatView). Not associated with leaderboard activities.
+
+  2. **General (ID: 101)**
+    - **Description:** Basic persona settings and count assessments.
+    - **Skills:**
+      - **Name Clarity & Description Effectiveness:** Quick backend inferences to assess clarity and effectiveness upon persona creation.
+      - **User Satisfaction:** Upvote count-based assessment.
+      - **Model Citizen:** Toggle skill for users to allow usage of their data for AI improvement.
+      - **User Engagement:** View count-based metric.
+    - **Usage:** Integrated during persona creation; not associated with leaderboard.
+
+  3. **Bonus (ID: 102)**
+    - **Description:** Enhancements that boost the AI persona's capabilities.
+    - **Skills:**
+      - **APIs, Files, Web Browsing, Code Interpreter, DALL·E Image Generation:** Toggleable skills to enhance persona functionalities.
+    - **Usage:** Available during persona creation; skills are toggleable (True/False); not linked to leaderboard metrics.
+
+  4. **Cognition (ID: 103)**
+    - **Description:** Cognitive abilities focusing on problem-solving and analytical skills.
+    - **Skills:** Logic, Innovation, Curiosity, Creativity, Philosophy.
+    - **Implementation:** Skills assessed through specific prompts tailored to test and enhance cognitive capabilities.
+
+  5. **Mastery (ID: 104)**
+    - **Description:** Specialized knowledge and expert skills.
+    - **Skills:** Knowledge Domain, Historical Accuracy, Technical Expertise, Cultural Acuity, Artistry.
+    - **Implementation:** Each skill is developed and assessed through targeted prompts that reflect high-level expertise.
+
+  6. **Communication (ID: 105)**
+    - **Description:** Skills related to effective interpersonal communications.
+    - **Skills:** Focus, Tactfulness, Humor, Empathy, Descriptiveness.
+    - **Implementation:** Development through interactions that require nuanced communication, assessed via relevant prompts.
+
+  7. **Versatility (ID: 106)**
+    - **Description:** Adaptability and broad competency in various situations.
+    - **Skills:** Consistency, Pragmatism, Synergy, Adaptability, Resourcefulness.
+    - **Implementation:** Evaluated through diverse situational prompts that challenge personas to apply skills flexibly.
+
+  8. **Discipline (ID: 107)**
+    - **Description:** Custom skills dynamically assigned based on user activities and interactions.
+    - **Implementation:** Allows up to five custom-selected skills under this attribute, All as text to approve, next, then generated badges for the lowest tier, based on prompt submissions that do not fit other predefined categories, or are specialties.
+
+  9. **Infered Prompt (ID: 108)
+    - **Description:** Special generated prompt when ChatContent or ImageContent is submitted without a prompt.(cooldown/trottle)
+    - **Implementation:** 
+
+  ### Special Metadata for Prompts
+  - **Challenges (is_challenge):** User-to-user engagements where personas compete using the same prompt, with rankings based on comparative scores.
+  - **Research (is_research):** Data-focused prompts (chat or image) that do not contribute to direct leveling but enrich the dataset.
+  - **Bounties (is_bounty):** Tasks where users submit individual responses to prompts for immediate feedback and rewards.
+  - **Leveling (is_leveling):** Directly influences persona and user progression by linking prompt completion to skill and attribute enhancement.
+  - **Achievements (is_achievement):** Recognizes user accomplishments beyond basic leveling, adding layers of goals and rewards.
+  - **Quests (is_quest)** Recognized by user progression through tiers. T10-T6(Bronze)
+  - **Leaderboard (is_leaderboard_item)
+  - **Feed (is_feed_item)
+
+
+## Prompt App Overview
+
+**Purpose:**  
+The Prompt App in the Yayay platform is designed to manage user and persona interactions through structured prompts. It serves as a crucial component for guiding content creation, persona development, and user engagement by providing a framework for dynamic and interactive experiences.
+
+**Core Functionalities:**
+
+1. **Prompt Management:**
+   - Handles the creation, storage, and retrieval of prompts, ensuring they are categorized and easily accessible.
+   - Manages different prompt types, allowing for a variety of interactions, from general prompts to skill-specific and research-oriented prompts.
+   - Facilitates the modification of prompts, allowing updates to their text, category, rating, and visibility.
+
+2. **Integration with Other Apps:**
+   - Integrates with the Persona App to link prompts to specific personas, tracking interactions and progress.
+   - Works with the Content App to connect prompts to generated content, ensuring a seamless flow from prompt to content creation.
+   - Collaborates with the Leveling App to associate prompts with skill development, enhancing persona progression through structured tasks.
+
+3. **Advanced Features:**
+   - Supports the concept of forkable prompts, allowing users to create variations of existing prompts for tailored interactions.
+   - Implements a rating system for prompts, providing feedback mechanisms to assess prompt quality and effectiveness.
+   - Manages visibility settings, allowing prompts to be public or private, thus controlling their accessibility.
+
+**Enhanced Features:**
+
+- **Dynamic Prompt Generation:** Utilize AI to generate dynamic prompts based on user interactions and preferences, enhancing the relevance and engagement of prompts.
+  
+- **Prompt Analytics:** Implement analytics to track prompt performance, user engagement, and effectiveness in achieving persona development goals.
+
+- **Interactive Prompt Streams:** Develop interactive streams where prompts evolve based on user responses, creating a more immersive experience.
+
+**Technical Considerations:**
+- Use Django’s model inheritance and relational capabilities to create a robust and scalable prompt management system.
+- Implement caching mechanisms to optimize the retrieval and display of frequently accessed prompts.
+- Ensure efficient querying and indexing to handle large volumes of prompts and associated data without performance degradation.
+
+**Security and Integrity:**
+- Enforce rigorous validation and security protocols to ensure the integrity of prompt data and prevent unauthorized access or manipulation.
+- Integrate with the user management system to maintain strict control over who can create, modify, or delete prompts.
+
+### Overview of the Prompt App
+
+### Purpose:
+The Prompt App is a pivotal component of the Yayay platform, managing the creation and interaction of prompts that drive user engagement and persona development. It supports a variety of prompt types and integrates with other platform features to ensure a cohesive and dynamic user experience.
+
+### Core Components:
+
+1. **Prompt Models:**
+   - **Prompt:** The primary model storing prompt details, including text, author, rating, type, and associated skills and personas.
+
+2. **Prompt Administration:**
+   - Provides admin interfaces for managing prompts, with functionalities for searching, filtering, and ordering prompts.
+   - Includes actions to activate or deactivate prompts, controlling their availability.
+
+3. **API Endpoints:**
+   - **PromptViewSet:** Manages API interactions for prompts, including creation, retrieval, updating, and deletion.
+   - Supports filtering and searching by prompt text, author, category, and rating.
+
+4. **Forms and Validation:**
+   - **PromptForm:** Handles the creation and updating of prompts, including validation for text length and required fields.
+
+### Expanded Functionalities:
+
+- **Prompt Management:**
+  - **CRUD Operations:** The app supports creating, reading, updating, and deleting (CRUD) operations for prompts.
+  - **Visibility Control:** Prompts can be marked as public or private, controlling their accessibility.
+  - **Rating and Feedback:** Users can rate prompts, providing feedback on their quality and usefulness.
+
+- **API Integration:**
+  - **Filtering and Searching:** Supports filtering prompts by category, author, rating, and other criteria.
+  - **Pagination:** Implements standard pagination for API responses to handle large datasets efficiently.
+
+- **Notification and Activity Logging:**
+  - **Signals:** Utilizes Django signals to log and notify about prompt creation, updates, and deletions.
+  - **Activity Feed:** Generates activity logs and notifications for prompt interactions.
+
+### Architectural Considerations:
+
+- **Scalability:**
+  - Designed to handle a large volume of prompts with efficient querying and indexing.
+  - Uses pagination and filtering to manage data retrieval and display.
+
+- **Security:**
+  - Ensures only authorized users can create, update, or delete prompts.
+  - Protects prompt data and manages access controls securely.
+
+- **Integration:**
+  - Seamlessly integrates with other apps, such as the Persona App for tracking interactions and the Leveling App for skill development.
+
+### Summary
+
+The Prompt App is essential for managing user interactions and persona development within the Yayay platform. It supports a variety of prompt types and integrates with other platform features to provide a cohesive and dynamic user experience. The app's architecture ensures scalability, security, and efficient management of prompts, making it a critical component for driving engagement and progression on the platform.

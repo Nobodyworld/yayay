@@ -1,0 +1,1865 @@
+templates\app/
+    all_feed.html
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}All Feed{% endblock %}
+
+{% block content %}
+<div class="container mt-3">
+    <h2>All Feed</h2>
+    <ul class="list-group">
+        {% for item in feed_items %}
+            <li class="list-group-item">
+                {{ item.content }}
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock content %}
+{% block scripts %}
+    {% include 'snippets/_loading_indicator.html' %}
+    {% include 'snippets/_scripts.html' %}
+{% endblock scripts %}
+
+---
+
+    artifacts.html
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}Artifact Management{% endblock %}
+
+{% block content %}
+<div class="container mt-3">
+    {% if mode == "list" %}
+        <h2>Artifacts List</h2>
+        <ul class="list-group">
+            {% for artifact in artifacts %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <a href="{% url 'artifact_detail' artifact.id %}">{{ artifact.title }}</a>
+                    </div>
+                    <div>
+                        <a href="{% url 'artifact_update' artifact.id %}" class="btn btn-link">Edit</a>
+                        <a href="{% url 'artifact_delete' artifact.id %}" class="btn btn-link text-danger">Delete</a>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+        <a href="{% url 'artifact_create' %}" class="btn btn-primary mt-3">Create New Artifact</a>
+    {% elif mode == "create" %}
+        {% include "snippets/_form.html" with action_url="{% url 'artifact_create' %}" form=form button_text="Create Artifact" %}
+    {% elif mode == "detail" %}
+        {% include "snippets/_detail.html" with object=artifact %}
+    {% elif mode == "update" %}
+        {% include "snippets/_form.html" with action_url="{% url 'artifact_update' artifact.id %}" form=form button_text="Update Artifact" %}
+    {% elif mode == "delete" %}
+        {% include "snippets/_delete.html" with object_name="artifact" object_list_url="{% url 'artifact_list' %}" %}
+    {% endif %}
+</div>
+{% endblock content %}
+{% block scripts %}
+    {% include 'snippets/_loading_indicator.html' %}
+    {% include 'snippets/_scripts.html' %}
+{% endblock scripts %}
+
+---
+
+    collectives.html
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}Collective Management{% endblock %}
+
+{% block content %}
+<div class="container mt-3">
+    {% if mode == "list" %}
+        <h2>Collectives List</h2>
+        <ul class="list-group">
+            {% for collective in collectives %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <a href="{% url 'collective_detail' collective.id %}">{{ collective.name }}</a>
+                    </div>
+                    <div>
+                        <a href="{% url 'collective_update' collective.id %}" class="btn btn-link">Edit</a>
+                        <a href="{% url 'collective_delete' collective.id %}" class="btn btn-link text-danger">Delete</a>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+        <a href="{% url 'collective_create' %}" class="btn btn-primary mt-3">Create New Collective</a>
+    {% elif mode == "create" %}
+        {% include "snippets/_form.html" with action_url="{% url 'collective_create' %}" form=form button_text="Create Collective" %}
+    {% elif mode == "detail" %}
+        {% include "snippets/_detail.html" with object=collective %}
+    {% elif mode == "update" %}
+        {% include "snippets/_form.html" with action_url="{% url 'collective_update' collective.id %}" form=form button_text="Update Collective" %}
+    {% elif mode == "delete" %}
+        {% include "snippets/_delete.html" with object_name="collective" object_list_url="{% url 'collective_list' %}" %}
+    {% endif %}
+</div>
+{% endblock content %}
+{% block scripts %}
+    {% include 'snippets/_loading_indicator.html' %}
+    {% include 'snippets/_scripts.html' %}
+{% endblock scripts %}
+
+---
+
+    content.html
+{% extends "base/base.html" %}
+{% block content %}
+<div class="container">
+    {% if mode == "list_chats" %}
+        <ul class="list-group">
+            {% for chat in chats %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5>{{ chat.persona.name }}</h5>
+                        <p>{{ chat.content }}</p>
+                    </div>
+                    <div>
+                        <a href="{% url 'content:chat_detail' chat.id %}" class="btn btn-link">View</a>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+        <a href="{% url 'content:chat_create' %}" class="btn btn-primary mt-3">Create New Chat</a>
+    {% elif mode == "create_chat" %}
+        {% include "snippets/_form.html" with action_url="{% url 'content:chat_create' %}" form=form button_text="Create Chat" %}
+    {% elif mode == "detail_chat" %}
+        {% include "snippets/_detail.html" with object=chat %}
+    {% elif mode == "list_images" %}
+        <ul class="list-group">
+            {% for image in images %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5>{{ image.persona.name }}</h5>
+                        <img src="{{ image.image.url }}" alt="{{ image.caption }}" style="max-width: 200px;">
+                        <p>{{ image.caption }}</p>
+                    </div>
+                    <div>
+                        <a href="{% url 'content:image_detail' image.id %}" class="btn btn-link">View</a>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+        <a href="{% url 'content:image_create' %}" class="btn btn-primary mt-3">Upload New Image</a>
+    {% elif mode == "create_image" %}
+        {% include "snippets/_form.html" with action_url="{% url 'content:image_create' %}" form=form button_text="Upload Image" %}
+    {% elif mode == "detail_image" %}
+        {% include "snippets/_detail.html" with object=image %}
+    {% elif mode == "select" %}
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="persona_id">Select Persona:</label>
+                <select id="persona_id" name="persona_id" class="form-control">
+                    {% for persona in personas %}
+                        <option value="{{ persona.id }}">{{ persona.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Select</button>
+        </form>
+    {% endif %}
+</div>
+{% endblock content %}
+{% block scripts %}
+<!-- Add any additional scripts here -->
+{% endblock scripts %}
+
+---
+
+    goals.html
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}Goal Management{% endblock %}
+
+{% block content %}
+<div class="container mt-3">
+    {% if mode == "list" %}
+        <h2>Goals List</h2>
+        <ul class="list-group">
+            {% for goal in goals %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <a href="{% url 'goals:goal_detail' goal.id %}">{{ goal.title }}</a>
+                    </div>
+                    <div>
+                        <a href="{% url 'goals:goal_update' goal.id %}" class="btn btn-link">Edit</a>
+                        <a href="{% url 'goals:goal_delete' goal.id %}" class="btn btn-link text-danger">Delete</a>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+        <a href="{% url 'goals:goal_create' %}" class="btn btn-primary mt-3">Set New Goal</a>
+    {% elif mode == "create" %}
+        {% include "snippets/_form.html" with action_url="{% url 'goals:goal_create' %}" form=form button_text="Set Goal" %}
+    {% elif mode == "detail" %}
+        {% include "snippets/_detail.html" with object=goal %}
+    {% elif mode == "update" %}
+        {% include "snippets/_form.html" with action_url="{% url 'goals:goal_update' goal.id %}" form=form button_text="Update Goal" %}
+    {% elif mode == "delete" %}
+        {% include "snippets/_delete.html" with object_name="goal" object_list_url="{% url 'goals:goal_list' %}" %}
+    {% endif %}
+</div>
+{% endblock content %}
+{% block scripts %}
+    {% include 'snippets/_loading_indicator.html' %}
+    {% include 'snippets/_scripts.html' %}
+{% endblock scripts %}
+
+---
+
+    home.html
+{% extends "base/base.html" %}
+{% load static %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="content-wrapper body-section-1-background">
+    <section class="main-dashboard">
+        {% if content %}
+            <p>{{ content.content }}</p>
+            <div class="post-content body-section-2-background">
+                <h2>Create Post</h2>
+                <div class="post-buttons">
+                    <!-- Buttons for creating posts -->
+                </div>
+                <div id="postForms">
+                    <!-- Include forms for posting content -->
+                </div>
+            </div>
+            <div id="feedContainer" class="feed-container body-section-3-background">
+                <ul class="feed-list">
+                    <!-- Dynamic feed items will be loaded here based on the button pressed -->
+                </ul>
+            </div>
+        {% else %}
+            <p>No content available at the moment. Please check back later or visit our <a href="{% url 'home:home' %}">homepage</a>.</p>
+        {% endif %}
+    </section>
+    <section class="navigation-section">
+        <h1>Welcome to the Home Page</h1>
+        <div>
+            <h2>Navigate to:</h2>
+            <ul>
+                <li><a href="{% url 'content:content_home' %}">Content</a></li>
+                <li><a href="{% url 'personas:personas_list' %}">Personas</a></li>
+                <li><a href="{% url 'goals:goal_list' %}">Goals</a></li>
+                <li><a href="{% url 'artifacts:artifacts_list' %}">Artifacts</a></li>
+                <li><a href="{% url 'collectives:collectives_list' %}">Collectives</a></li>
+                <li><a href="{% url 'problems:identify_problems' %}">Problems</a></li>
+                <li><a href="{% url 'solutions:create_solution' %}">Solutions</a></li>
+                <li><a href="{% url 'metrics:analytics_dashboard' %}">Metrics</a></li>
+                <li><a href="{% url 'leveling:attributes_list' %}">Leveling</a></li>
+                <li><a href="{% url 'prompts:prompts_list' %}">Prompts</a></li>
+                <li><a href="{% url 'social:tag_list' %}">Social</a></li>
+                <li><a href="{% url 'transactions:earn_tokens' %}">Transactions</a></li>
+                {% if user %}
+                    <li><a href="{% url 'users:profile' user_id=user.id %}">Users</a></li>
+                {% else %}
+                    <li><a href="{% url 'account_login' %}">Login</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </section>
+</div>
+{% endblock %}
+
+{% block scripts %}
+    {% include 'snippets/_loading_indicator.html' %}
+    {% include 'snippets/_scripts.html' %}
+{% endblock scripts %}
+
+---
+
+    knowledge.html
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}Knowledge Management{% endblock %}
+
+{% block content %}
+<div class="container mt-3">
+    {% if mode == "list" %}
+        <h2>Knowledge List</h2>
+        <ul class="list-group">
+            {% for knowledge in knowledges %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <a href="{% url 'knowledge_detail' knowledge.id %}">{{ knowledge.title }}</a>
+                    </div>
+                    <div>
+                        <a href="{% url 'knowledge_update' knowledge.id %}" class="btn btn-link">Edit</a>
+                        <a href="{% url 'knowledge_delete' knowledge.id %}" class="btn btn-link text-danger">Delete</a>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+        <a href="{% url 'knowledge_create' %}" class="btn btn-primary mt-3">Create New Knowledge</a>
+    {% elif mode == "create" %}
+        {% include "snippets/_form.html" with action_url="{% url 'knowledge_create' %}" form=form button_text="Create Knowledge" %}
+    {% elif mode == "detail" %}
+        {% include "snippets/_detail.html" with object=knowledge %}
+    {% elif mode == "update" %}
+        {% include "snippets/_form.html" with action_url="{% url 'knowledge_update' knowledge.id %}" form=form button_text="Update Knowledge" %}
+    {% elif mode == "delete" %}
+        {% include "snippets/_delete.html" with object_name="knowledge" object_list_url="{% url 'knowledge_list' %}" %}
+    {% endif %}
+</div>
+{% endblock content %}
+{% block scripts %}
+    {% include 'snippets/_loading_indicator.html' %}
+    {% include 'snippets/_scripts.html' %}
+{% endblock scripts %}
+
+---
+
+    leveling.html
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}
+    {% if mode == "list_attributes" %}Attributes List{% elif mode == "detail_attribute" %}Attribute: {{ attribute.name }}{% elif mode == "list_skills" %}Skills List{% elif mode == "detail_skill" %}Skill: {{ skill.name }}{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="container mt-3">
+    {% if mode == "list_attributes" %}
+        <h2>Attributes List</h2>
+        <ul class="list-group">
+            {% for attribute in attributes %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <a href="{% url 'leveling:attribute_detail' attribute.pk %}">{{ attribute.name }}</a>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+        <a href="{% url 'leveling:attribute_create' %}" class="btn btn-primary mt-3">Create New Attribute</a>
+
+    {% elif mode == "detail_attribute" %}
+        {% include "snippets/_detail.html" with object=attribute %}
+        <h3>Skills</h3>
+        <ul class="list-group">
+            {% for skill in skills %}
+                <li class="list-group-item">{{ skill.name }}</li>
+            {% endfor %}
+        </ul>
+
+    {% elif mode == "list_skills" %}
+        <h2>Skills List</h2>
+        <ul class="list-group">
+            {% for skill in skills %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <a href="{% url 'leveling:skill_detail' skill.pk %}">{{ skill.name }}</a>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+        <a href="{% url 'leveling:skill_create' %}" class="btn btn-primary mt-3">Create New Skill</a>
+
+    {% elif mode == "detail_skill" %}
+        {% include "snippets/_detail.html" with object=skill %}
+        <h3>Associated Attribute: {{ skill.attribute.name }}</h3>
+    {% endif %}
+</div>
+{% endblock content %}
+{% block scripts %}
+    {% include 'snippets/_loading_indicator.html' %}
+    <script src="{% static 'js/donutChart.js' %}"></script>
+{% endblock scripts %}
+
+---
+
+    metrics.html
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}
+    {% if mode == "list_attributes" %}Attributes List{% elif mode == "detail_attribute" %}Attribute: {{ attribute.name }}{% elif mode == "list_skills" %}Skills List{% elif mode == "detail_skill" %}Skill: {{ skill.name }}{% elif mode == "list_metrics" %}Metrics List{% elif mode == "detail_metric" %}Metric: {{ skill_score.name }}{% elif mode == "analytics_dashboard" %}Analytics Dashboard{% elif mode == "detail_metrics" %}Metrics for {{ metrics.persona.name }}{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="container mt-3">
+    {% if mode == "list_attributes" %}
+        <h2>Attributes List</h2>
+        <ul class="list-group">
+            {% for attribute in attributes %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <a href="{% url 'attribute_detail' attribute.pk %}">{{ attribute.name }}</a>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+        <a href="{% url 'attribute_create' %}" class="btn btn-primary mt-3">Create New Attribute</a>
+
+    {% elif mode == "detail_attribute" %}
+        {% include "snippets/_detail.html" with object=attribute %}
+        <h3>Skills</h3>
+        <ul class="list-group">
+            {% for skill in skills %}
+                <li class="list-group-item">{{ skill.name }}</li>
+            {% endfor %}
+        </ul>
+        <h3>Tiers</h3>
+        <ul class="list-group">
+            {% for tier in tiers %}
+                <li class="list-group-item">{{ tier.name }}</li>
+            {% endfor %}
+        </ul>
+
+    {% elif mode == "list_skills" %}
+        <h2>Skills List</h2>
+        <ul class="list-group">
+            {% for skill in skills %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <a href="{% url 'skill_detail' skill.pk %}">{{ skill.name }}</a>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+        <a href="{% url 'skill_create' %}" class="btn btn-primary mt-3">Create New Skill</a>
+
+    {% elif mode == "detail_skill" %}
+        {% include "snippets/_detail.html" with object=skill %}
+        <h3>Tiers</h3>
+        <ul class="list-group">
+            {% for tier in tiers %}
+                <li class="list-group-item">{{ tier.name }}</li>
+            {% endfor %}
+        </ul>
+        <h3>Upvotes</h3>
+        <ul class="list-group">
+            {% for upvote in upvotes %}
+                <li class="list-group-item">{{ upvote.user.username }}</li>
+            {% endfor %}
+        </ul>
+        <h3>Ratings</h3>
+        <ul class="list-group">
+            {% for rating in ratings %}
+                <li class="list-group-item">{{ rating.value }}</li>
+            {% endfor %}
+        </ul>
+
+    {% elif mode == "list_metrics" %}
+        <h2>Metrics List</h2>
+        <ul class="list-group">
+            {% for skill_score in skill_scores %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <a href="{% url 'metrics_detail' skill_score.pk %}">{{ skill_score.name }}</a>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+
+    {% elif mode == "detail_metric" %}
+        {% include "snippets/_detail.html" with object=skill_score %}
+        <h3>Tiers</h3>
+        <ul class="list-group">
+            {% for tier in tiers %}
+                <li class="list-group-item">{{ tier.name }}</li>
+            {% endfor %}
+        </ul>
+        <h3>Upvotes</h3>
+        <ul class="list-group">
+            {% for upvote in upvotes %}
+                <li class="list-group-item">{{ upvote.user.username }}</li>
+            {% endfor %}
+        </ul>
+        <h3>Ratings</h3>
+        <ul class="list-group">
+            {% for rating in ratings %}
+                <li class="list-group-item">{{ rating.value }}</li>
+            {% endfor %}
+        </ul>
+
+    {% elif mode == "analytics_dashboard" %}
+        <h2>Analytics Dashboard</h2>
+        <ul class="list-group">
+            {% for metric in metrics %}
+                <li class="list-group-item">{{ metric.persona.name }} - {{ metric.total_points }}</li>
+            {% endfor %}
+        </ul>
+
+    {% elif mode == "detail_metrics" %}
+        {% include "snippets/_detail.html" with object=metrics.persona %}
+        <p>Social Count: {{ metrics.social_count }}</p>
+        <p>Achievement Points: {{ metrics.achievement_points }}</p>
+        <p>Total Points: {{ metrics.total_points }}</p>
+        <p>Total Attempts: {{ metrics.total_attempts }}</p>
+        <p>Highest Score: {{ metrics.highest_score }}</p>
+        <p>Last Updated: {{ metrics.last_updated }}</p>
+        <p>Average Rating: {{ metrics.average_rating }}</p>
+        <p>Total Upvotes: {{ metrics.total_upvotes }}</p>
+        <p>Total Downvotes: {{ metrics.total_downvotes }}</p>
+    {% endif %}
+</div>
+{% endblock content %}
+{% block scripts %}
+    {% include 'snippets/_loading_indicator.html' %}
+    {% include 'snippets/_scripts.html' %}
+{% endblock scripts %}
+
+---
+
+    personas.html
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}Personas Management{% endblock %}
+
+{% block content %}
+<div class="container mt-3">
+    {% if mode == "list" %}
+        <h2>Personas List</h2>
+        <ul class="list-group">
+            {% for persona in personas %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <a href="{% url 'personas:persona_detail' persona.id %}">{{ persona.name }}</a>
+                    </div>
+                    <div>
+                        <a href="{% url 'personas:update_persona' persona.id %}" class="btn btn-link">Edit</a>
+                        <a href="{% url 'personas:persona_delete' persona.id %}" class="btn btn-link text-danger">Delete</a>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+        <a href="{% url 'personas:create_persona' %}" class="btn btn-primary mt-3">Create New Persona</a>
+    {% elif mode == "create" %}
+        {% include "snippets/_form.html" with title="Create New Persona" button_text="Create" %}
+    {% elif mode == "detail" %}
+        {% include "snippets/_detail.html" with object=persona %}
+    {% elif mode == "update" %}
+        {% include "snippets/_form.html" with title="Edit Persona" button_text="Update Persona" %}
+    {% elif mode == "delete" %}
+        {% include "snippets/_delete.html" with object_name="persona" object_list_url=personas_list_url %}
+    {% endif %}
+</div>
+{% endblock content %}
+{% block scripts %}
+    {% include 'snippets/_loading_indicator.html' %}
+    {% include 'snippets/_scripts.html' %}
+{% endblock scripts %}
+
+---
+
+    perspectives.html
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}Perspective Management{% endblock %}
+
+{% block content %}
+<div class="container mt-3">
+    {% if mode == "list" %}
+        <h2>Perspectives List</h2>
+        <ul class="list-group">
+            {% for perspective in perspectives %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <a href="{% url 'perspective_detail' perspective.id %}">{{ perspective.title }}</a>
+                    </div>
+                    <div>
+                        <a href="{% url 'perspective_update' perspective.id %}" class="btn btn-link">Edit</a>
+                        <a href="{% url 'perspective_delete' perspective.id %}" class="btn btn-link text-danger">Delete</a>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+        <a href="{% url 'perspective_create' %}" class="btn btn-primary mt-3">Create New Perspective</a>
+    {% elif mode == "create" %}
+        {% include "snippets/_form.html" with title="Create Perspective" button_text="Create Perspective" %}
+    {% elif mode == "detail" %}
+        {% include "snippets/_detail.html" with object=perspective %}
+    {% elif mode == "update" %}
+        {% include "snippets/_form.html" with title="Edit Perspective" button_text="Update Perspective" %}
+    {% elif mode == "delete" %}
+        {% include "snippets/_delete.html" with object_name="perspective" object_list_url="{% url 'perspective_list' %}" %}
+    {% endif %}
+</div>
+{% endblock content %}
+{% block scripts %}
+    {% include 'snippets/_loading_indicator.html' %}
+    {% include 'snippets/_scripts.html' %}
+{% endblock scripts %}
+
+---
+
+    possessions.html
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}Possession Management{% endblock %}
+
+{% block content %}
+<div class="container mt-3">
+    {% if mode == "list" %}
+        <h2>My Possessions</h2>
+        <ul class="list-group">
+            {% for possession in possessions %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <a href="{% url 'possession_detail' possession.pk %}">{{ possession.name }}</a>
+                    </div>
+                    <div>
+                        <a href="{% url 'possession_update' possession.pk %}" class="btn btn-link">Edit</a>
+                        <a href="{% url 'possession_delete' possession.pk %}" class="btn btn-link text-danger">Delete</a>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+        <a href="{% url 'possession_create' %}" class="btn btn-primary mt-3">Add New Possession</a>
+    {% elif mode == "create" %}
+        {% include "snippets/_form.html" with title="Add Possession" button_text="Add Possession" %}
+    {% elif mode == "detail" %}
+        {% include "snippets/_detail.html" with object=possession %}
+    {% elif mode == "update" %}
+        {% include "snippets/_form.html" with title="Edit Possession" button_text="Update Possession" %}
+    {% elif mode == "delete" %}
+        {% include "snippets/_delete.html" with object_name="possession" object_list_url="{% url 'possession_list' %}" %}
+    {% endif %}
+</div>
+{% endblock content %}
+{% block scripts %}
+    {% include 'snippets/_loading_indicator.html' %}
+    {% include 'snippets/_scripts.html' %}
+{% endblock scripts %}
+
+---
+
+    problems.html
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}Problem Management{% endblock %}
+
+{% block content %}
+<div class="container mt-3">
+    {% if mode == "list" %}
+        <h2>Problems List</h2>
+        <ul class="list-group">
+            {% for problem in problems %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <a href="{% url 'problem_detail' problem.id %}">{{ problem.title }}</a>
+                    </div>
+                    <div>
+                        <a href="{% url 'problem_update' problem.id %}" class="btn btn-link">Edit</a>
+                        <a href="{% url 'problem_delete' problem.id %}" class="btn btn-link text-danger">Delete</a>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+        <a href="{% url 'problem_create' %}" class="btn btn-primary mt-3">Identify a Problem</a>
+    {% elif mode == "create" %}
+        {% include "snippets/_form.html" with title="Identify Problem" button_text="Identify Problem" %}
+    {% elif mode == "detail" %}
+        {% include "snippets/_detail.html" with object=problem %}
+    {% elif mode == "update" %}
+        {% include "snippets/_form.html" with title="Edit Problem" button_text="Update Problem" %}
+    {% elif mode == "delete" %}
+        {% include "snippets/_delete.html" with object_name="problem" object_list_url="{% url 'problem_list' %}" %}
+    {% endif %}
+</div>
+{% endblock content %}
+{% block scripts %}
+    {% include 'snippets/_loading_indicator.html' %}
+    {% include 'snippets/_scripts.html' %}
+{% endblock scripts %}
+
+---
+
+    prompts.html
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}Prompts Management{% endblock %}
+
+{% block content %}
+<div class="container mt-3">
+    {% if mode == "list" %}
+        <h2>Prompts List</h2>
+        <ul class="list-group">
+            {% for prompt in prompts %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <a href="{% url 'prompts:prompts_detail' prompt.id %}">{{ prompt.text }}</a>
+                    </div>
+                    <div>
+                        <a href="{% url 'prompts:prompts_update' prompt.id %}" class="btn btn-link">Edit</a>
+                        <a href="{% url 'prompts:prompts_delete' prompt.id %}" class="btn btn-link text-danger">Delete</a>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+        <a href="{% url 'prompts:prompts_create' %}" class="btn btn-primary mt-3">Create New Prompt</a>
+    {% elif mode == "create" %}
+        {% include "snippets/_form.html" with title="Create Prompt" button_text="Create Prompt" %}
+    {% elif mode == "detail" %}
+        {% include "snippets/_detail.html" with object=prompt %}
+    {% elif mode == "update" %}
+        {% include "snippets/_form.html" with title="Edit Prompt" button_text="Update Prompt" %}
+    {% elif mode == "delete" %}
+        {% include "snippets/_delete.html" with object_name="prompt" object_list_url=prompts_list_url %}
+    {% endif %}
+</div>
+{% endblock content %}
+{% block scripts %}
+    {% include 'snippets/_loading_indicator.html' %}
+    {% include 'snippets/_scripts.html' %}
+{% endblock scripts %}
+
+---
+
+    social.html
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}Social Management{% endblock %}
+
+{% block content %}
+<div class="container mt-3">
+    {% if mode == "list" %}
+        <h2>Social List</h2>
+        <ul class="list-group">
+            {% for social in socials %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <a href="{% url 'social_detail' social.id %}">{{ social.title }}</a>
+                    </div>
+                    <div>
+                        <a href="{% url 'social_update' social.id %}" class="btn btn-link">Edit</a>
+                        <a href="{% url 'social_delete' social.id %}" class="btn btn-link text-danger">Delete</a>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+        <a href="{% url 'social_create' %}" class="btn btn-primary mt-3">Create New Social</a>
+    {% elif mode == "create" %}
+        {% include "snippets/_form.html" with title="Create Social" button_text="Create Social" %}
+    {% elif mode == "detail" %}
+        {% include "snippets/_detail.html" with object=social %}
+    {% elif mode == "update" %}
+        {% include "snippets/_form.html" with title="Edit Social" button_text="Update Social" %}
+    {% elif mode == "delete" %}
+        {% include "snippets/_delete.html" with object_name="social" object_list_url="{% url 'social_list' %}" %}
+    {% endif %}
+</div>
+{% endblock content %}
+{% block scripts %}
+    {% include 'snippets/_loading_indicator.html' %}
+    {% include 'snippets/_scripts.html' %}
+{% endblock scripts %}
+
+---
+
+    solutions.html
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}Solution Management{% endblock %}
+
+{% block content %}
+<div class="container mt-3">
+    {% if mode == "list" %}
+        <h2>Solutions List</h2>
+        <ul class="list-group">
+            {% for solution in solutions %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <a href="{% url 'solution_detail' solution.id %}">{{ solution.title }}</a>
+                    </div>
+                    <div>
+                        <a href="{% url 'solution_update' solution.id %}" class="btn btn-link">Edit</a>
+                        <a href="{% url 'solution_delete' solution.id %}" class="btn btn-link text-danger">Delete</a>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+        <a href="{% url 'solution_create' %}" class="btn btn-primary mt-3">Propose a Solution</a>
+    {% elif mode == "create" %}
+        {% include "snippets/_form.html" with title="Create Solution" button_text="Create Solution" %}
+    {% elif mode == "detail" %}
+        {% include "snippets/_detail.html" with object=solution %}
+    {% elif mode == "update" %}
+        {% include "snippets/_form.html" with title="Edit Solution" button_text="Update Solution" %}
+    {% elif mode == "delete" %}
+        {% include "snippets/_delete.html" with object_name="solution" object_list_url="{% url 'solution_list' %}" %}
+    {% endif %}
+</div>
+{% endblock content %}
+{% block scripts %}
+    {% include 'snippets/_loading_indicator.html' %}
+    {% include 'snippets/_scripts.html' %}
+{% endblock scripts %}
+
+---
+
+    transactions.html
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}Transaction Management{% endblock %}
+
+{% block content %}
+<div class="container mt-3">
+    {% if mode == "list" %}
+        <h2>Transactions List</h2>
+        <ul class="list-group">
+            {% for transaction in transactions %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <a href="{% url 'transaction_detail' transaction.id %}">{{ transaction.title }}</a>
+                    </div>
+                    <div>
+                        <a href="{% url 'transaction_update' transaction.id %}" class="btn btn-link">Edit</a>
+                        <a href="{% url 'transaction_delete' transaction.id %}" class="btn btn-link text-danger">Delete</a>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+        <a href="{% url 'transaction_create' %}" class="btn btn-primary mt-3">Create New Transaction</a>
+    {% elif mode == "create" %}
+        {% include "snippets/_form.html" with title="Create Transaction" button_text="Create Transaction" %}
+    {% elif mode == "detail" %}
+        {% include "snippets/_detail.html" with object=transaction %}
+    {% elif mode == "update" %}
+        {% include "snippets/_form.html" with title="Edit Transaction" button_text="Update Transaction" %}
+    {% elif mode == "delete" %}
+        {% include "snippets/_delete.html" with object_name="transaction" object_list_url="{% url 'transaction_list' %}" %}
+    {% endif %}
+</div>
+{% endblock content %}
+{% block scripts %}
+    {% include 'snippets/_loading_indicator.html' %}
+    {% include 'snippets/_scripts.html' %}
+{% endblock scripts %}
+
+---
+
+    users.html
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}User Management{% endblock %}
+
+{% block content %}
+<div class="container mt-3">
+    {% if mode == "list" %}
+        <h2>Users List</h2>
+        <ul class="list-group">
+            {% for user in users %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <a href="{% url 'user_detail' user.id %}">{{ user.username }}</a>
+                    </div>
+                    <div>
+                        <a href="{% url 'user_update' user.id %}" class="btn btn-link">Edit</a>
+                        <a href="{% url 'user_delete' user.id %}" class="btn btn-link text-danger">Delete</a>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+        <a href="{% url 'user_create' %}" class="btn btn-primary mt-3">Create New User</a>
+    {% elif mode == "create" %}
+        {% include "snippets/_form.html" with title="Create User" button_text="Create User" %}
+    {% elif mode == "detail" %}
+        {% include "snippets/_detail.html" with object=user %}
+    {% elif mode == "update" %}
+        {% include "snippets/_form.html" with title="Edit User" button_text="Update User" %}
+    {% elif mode == "delete" %}
+        {% include "snippets/_delete.html" with object_name="user" object_list_url="{% url 'user_list' %}" %}
+    {% endif %}
+</div>
+{% endblock content %}
+{% block scripts %}
+    {% include 'snippets/_loading_indicator.html' %}
+    {% include 'snippets/_scripts.html' %}
+{% endblock scripts %}
+
+---
+
+templates\base/
+    base.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>{% block title %}My Project{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    {% block additional_css %}{% endblock %}
+</head>
+<body class="bg-light text-dark">
+    {% include 'snippets/_preloader.html' %}
+    <header role="banner">
+        {% block navbar %}
+            {% include 'includes/_navbar.html' %}
+        {% endblock navbar %}
+    </header>
+    <div class="pcoded-main-container">
+        <div class="pcoded-wrapper">
+            <div class="pcoded-content">
+                <div class="pcoded-inner-content">
+                    {% block breadcrumb %}
+                        {% include 'includes/_breadcrumb.html' %}
+                    {% endblock breadcrumb %}
+                    <main role="main">
+                        <div class="main-body">
+                            <div class="page-wrapper">
+                                {% block content %}{% endblock %}
+                            </div>
+                        </div>
+                    </main>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer role="contentinfo">
+        {% block footer %}
+            {% include 'includes/_footer.html' %}
+        {% endblock %}
+    </footer>
+    {% block scripts %}
+        <script src="{% static 'js/jquery.min.js' %}"></script>
+        <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+        <script src="{% static 'js/scripts.js' %}"></script>
+        {% include 'snippets/_scripts.html' %}
+        {% block extra_js %}{% endblock %}
+    {% endblock scripts %}
+</body>
+</html>
+
+---
+
+    base_app.html
+{% extends "base/base.html" %}
+
+{% block content %}
+<div class="container mt-3">
+    {% block app_content %}
+    {% endblock app_content %}
+</div>
+{% endblock content %}
+
+---
+
+    base_card.html
+<div class="persona-card card">
+  <img src="{{ persona.image_path|default:'' }}" alt="{{ persona.name }}" class="card-img-top persona-image">
+  <div class="card-body">
+      <h3 class="card-title">{{ persona.name }}</h3>
+      <p class="card-text">{{ persona.description }}</p>
+      {% include 'components/persona/attributes.html' with attributes=persona.attributes %}
+  </div>
+</div>
+
+---
+
+    base_create.html
+{% extends "base/base.html" %}
+
+{% block title %}Create {{ object_name }}{% endblock %}
+
+{% block content %}
+<div class="container mt-3">
+    <h2>Create {{ object_name }}</h2>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Create {{ object_name }}</button>
+    </form>
+</div>
+{% endblock %}
+
+---
+
+    base_dashboard.html
+{% extends 'base/base.html' %}
+{% block head %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'css/dashboard-style.css' %}">
+    <script src="{% static 'js/dashboard-scripts.js' %}"></script>
+{% endblock head %}
+{% block pre_loader %}
+    {{ block.super }}
+{% endblock pre_loader %}
+{% block sidebar %}
+    {{ block.super }}
+{% endblock sidebar %}
+{% block header %}
+    {{ block.super }}
+{% endblock header %}
+{% block content %}
+    <div class="dashboard-content">
+        <div class="container mt-3">
+            <h2>Dashboard Overview</h2>
+            <p>Welcome to your dashboard. Here's a quick summary of what's going on.</p>
+        </div>
+    </div>
+{% endblock content %}
+{% block extra_js %}
+    {{ block.super }}
+    <script src="{% static 'js/additional-dashboard-scripts.js' %}"></script>
+{% endblock extra_js %}
+
+---
+
+    base_delete.html
+{% extends "base/base.html" %}
+
+{% block title %}Delete {{ object_name }}{% endblock %}
+
+{% block content %}
+    {% include "snippets/_delete.html" with object_name=object_name object_list_url=object_list_url %}
+{% endblock %}
+
+---
+
+    base_detail.html
+{% extends "base/base.html" %}
+
+{% block title %}{{ object_name }} Detail{% endblock %}
+
+{% block content %}
+    {% include "snippets/_detail.html" %}
+{% endblock %}
+
+---
+
+    base_generic.html
+{% extends "base/base.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="container mt-3">
+    <h2>{{ title }}</h2>
+    {% block content_body %}
+    {% endblock %}
+</div>
+{% endblock %}
+
+---
+
+    base_landing.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>{% block title %}Yayay{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    {% block additional_css %}{% endblock %}
+</head>
+<body class="bg-light text-dark">
+    {% include 'snippets/_preloader.html' %}
+    <header role="banner">
+        {% block navbar %}
+            {% include 'includes/_navbar.html' %}
+        {% endblock navbar %}
+    </header>
+    <div class="pcoded-main-container">
+        <div class="pcoded-wrapper">
+            <div class="pcoded-content">
+                <div class="pcoded-inner-content">
+                    {% block breadcrumb %}
+                        {% include 'includes/_breadcrumb.html' %}
+                    {% endblock breadcrumb %}
+                    <div class="main-body">
+                        <div class="page-wrapper">
+                            {% block content %}{% endblock %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% include 'includes/_footer.html' %}
+    {% block scripts %}
+        <script src="{% static 'js/jquery.min.js' %}"></script>
+        <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+        {% include 'snippets/_scripts.html' %}
+        {% block extra_js %}{% endblock %}
+    {% endblock scripts %}
+</body>
+</html>
+
+---
+
+    base_list.html
+{% extends "base/base.html" %}
+
+{% block title %}{{ object_name }} List{% endblock %}
+
+{% block content %}
+<div class="container mt-3">
+    <h2>{{ object_name }} List</h2>
+    <ul class="list-group">
+        {% for item in items %}
+            <li class="list-group-item"><a href="{% url detail_url item.id %}">{{ item.title }}</a> - {{ item.description }}</li>
+        {% endfor %}
+    </ul>
+    <a href="{% url create_url %}" class="btn btn-primary mt-3">Create New {{ object_name }}</a>
+</div>
+{% endblock %}
+
+---
+
+templates\components/
+    _button.html
+<button type="{{ type|default:'button' }}" class="btn {{ btn_class }}">{{ label }}</button>
+
+---
+
+    _notifications.html
+<div class="notifications">
+    <!-- Notification content will be dynamically loaded here -->
+</div>
+
+---
+
+    _pagination.html
+<!-- templates/components/_pagination.html -->
+<nav aria-label="Page navigation example" class="mt-3">
+    <ul class="pagination justify-content-center">
+        <li class="page-item {% if not page_obj.has_previous %}disabled{% endif %}">
+            <a class="page-link" href="?page={{ page_obj.previous_page_number }}" tabindex="-1">Previous</a>
+        </li>
+        {% for num in page_obj.paginator.page_range %}
+            <li class="page-item {% if num == page_obj.number %}active{% endif %}">
+                <a class="page-link" href="?page={{ num }}">{{ num }} <span class="sr-only">(current)</span></a>
+            </li>
+        {% endfor %}
+        <li class="page-item {% if not page_obj.has_next %}disabled{% endif %}">
+            <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+        </li>
+    </ul>
+</nav>
+
+---
+
+    _searchform.html
+<!-- templates/components/_searchform.html -->
+<form action="{% url 'search' %}" method="get" class="d-flex">
+    <input type="text" name="q" class="form-control me-2" placeholder="Search..." value="{{ request.GET.q }}">
+    <button type="submit" class="btn btn-primary">Search</button>
+</form>
+
+---
+
+    _tabs.html
+{% extends "base/base.html" %}
+{% load static %}
+{% block content %}
+<div class="row">
+    <div class="col-sm-12">
+        <h5>Basic Tabs</h5>
+        <hr>
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active text-uppercase" id="home-tab" data-bs-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-uppercase" id="profile-tab" data-bs-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Profile</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-uppercase" id="contact-tab" data-bs-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Contact</a>
+            </li>
+        </ul>
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                <p class="mb-0"></p>
+            </div>
+            <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                <p class="mb-0"></p>
+            </div>
+            <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+                <p class="mb-0"></p>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-12">
+        <h5 class="mt-4">Basic Pills</h5>
+        <hr>
+        <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="pills-home-tab" data-bs-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">Profile</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="pills-contact-tab" data-bs-toggle="pill" href="#pills-contact" role="tab" aria-controls="pills-contact" aria-selected="false">Contact</a>
+            </li>
+        </ul>
+        <div class="tab-content" id="pills-tabContent">
+            <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+                <p class="mb-0"></p>
+            </div>
+            <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+                <p class="mb-0"></p>
+            </div>
+            <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">
+                <p class="mb-0"></p>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-12">
+        <h5 class="mt-4">Vertical Pills</h5>
+        <hr>
+        <div class="row">
+            <div class="col-md-3 col-sm-12">
+                <ul class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                    <li><a class="nav-link text-left active" id="v-pills-home-tab" data-bs-toggle="pill" href="#v-pills-home" role="tab" aria-controls="v-pills-home" aria-selected="true">Home</a></li>
+                    <li><a class="nav-link text-left" id="v-pills-profile-tab" data-bs-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="v-pills-profile" aria-selected="false">Profile</a></li>
+                    <li><a class="nav-link text-left" id="v-pills-messages-tab" data-bs-toggle="pill" href="#v-pills-messages" role="tab" aria-controls="v-pills-messages" aria-selected="false">Messages</a></li>
+                    <li><a class="nav-link text-left" id="v-pills-settings-tab" data-bs-toggle="pill" href="#v-pills-settings" role="tab" aria-controls="v-pills-settings" aria-selected="false">Settings</a></li>
+                </ul>
+            </div>
+            <div class="col-md-9 col-sm-12">
+                <div class="tab-content" id="v-pills-tabContent">
+                    <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
+                        <p class="mb-0"></p>
+                    </div>
+                    <div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
+                        <p class="mb-0"></p>
+                    </div>
+                    <div class="tab-pane fade" id="v-pills-messages" role="tabpanel" aria-labelledby="v-pills-messages-tab">
+                        <p class="mb-0"></p>
+                    </div>
+                    <div class="tab-pane fade" id="v-pills-settings" role="tabpanel" aria-labelledby="v-pills-settings-tab">
+                        <p class="mb-0"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+---
+
+templates\includes/
+    _breadcrumb.html
+<!-- templates/includes/_breadcrumb.html -->
+<nav aria-label="breadcrumb" class="breadcrumb-container">
+    <ol class="breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList">
+        <li class="breadcrumb-item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+            <a href="{% url 'home:index' %}" itemprop="item">
+                <i class="fas fa-home" aria-hidden="true"></i>
+                <span itemprop="name">Home</span>
+            </a>
+            <meta itemprop="position" content="1" />
+        </li>
+        {% if parent %}
+        <li class="breadcrumb-item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+            <a href="{% url parent.url_name %}" itemprop="item">
+                <span itemprop="name">{{ parent|capfirst }}</span>
+            </a>
+            <meta itemprop="position" content="2" />
+        </li>
+        {% endif %}
+        <li class="breadcrumb-item active" aria-current="page" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+            <span itemprop="name">{{ segment|capfirst }}</span>
+            <meta itemprop="position" content="{% if parent %}3{% else %}2{% endif %}" />
+        </li>
+    </ol>
+</nav>
+
+---
+
+    _footer.html
+<!-- templates/includes/_footer.html -->
+<footer class="site-footer text-center py-3">
+    <p>&copy; 2024 YAYAY. All rights reserved.</p>
+</footer>
+
+---
+
+    _head.html
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimal-ui">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="description" content="{{ page_description|default:'Default description for Yayay' }}">
+    <meta name="keywords" content="{{ page_keywords|default:'GPTs, GPT, AI, machine learning, chat, bot, generative, prompts, images, inference' }}">
+    <meta name="author" content="NobodyWorld" />
+    <link rel="icon" href="{% static 'images/common/favicon.ico' %}" type="image/x-icon">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    <title>{% block title %}Yayay{% endblock %}</title>
+    {% block head_extra %}{% endblock %}
+</head>
+
+---
+
+    _header.html
+{% load static %}
+<header class="header-background py-3">
+    <button id="theme-button" class="btn btn-secondary" aria-label="Toggle dark and light themes">Switch Theme</button>
+    {% if user.is_authenticated %}
+    <nav class="navbar navbar-expand-lg navbar-light" aria-label="Primary">
+        <button id="menu-toggle" class="btn btn-outline-secondary" aria-label="Toggle menu visibility">Home</button>
+        <a href="{% url 'home:home' %}" class="navbar-brand" aria-label="Go to homepage">
+            <img src="{% static 'images/common/logo_yay_up_400.png' %}" alt="YAYAY Logo" class="logo">
+        </a>
+        <button id="logout-button" class="btn btn-danger" aria-label="Log out of your account">Logout</button>
+    </nav>
+    {% else %}
+    <nav class="navbar navbar-expand-lg navbar-light" aria-label="Primary">
+        <button id="login-button" class="btn btn-primary" aria-label="Log into your account">Login</button>
+        <a href="{% url 'home:home' %}" class="navbar-brand" aria-label="Go to homepage">
+            <img src="{% static 'images/common/logo_yay_up_400.png' %}" alt="YAYAY Logo" class="logo">
+        </a>
+    </nav>
+    {% endif %}
+    {% include 'includes/_navbar.html' %}
+</header>
+
+---
+
+    _navbar.html
+<nav class="sidebar" aria-label="Main navigation">
+    <ul class="list-unstyled">
+        <li class="{% if request.resolver_match.url_name == 'home' %}active{% endif %}">
+            <a href="{% url 'home:home' %}" aria-label="Home">
+                <i class="icon-home" aria-hidden="true"></i> Home
+            </a>
+        </li>
+        <li class="{% if request.resolver_match.url_name == 'personas_list' %}active{% endif %}">
+            <a href="{% url 'personas:personas_list' %}" aria-label="Personas">
+                <i class="icon-personas" aria-hidden="true"></i> Personas
+            </a>
+        </li>
+        <li class="{% if request.resolver_match.url_name == 'prompts_list' %}active{% endif %}">
+            <a href="{% url 'prompts:prompts_list' %}" aria-label="Prompts">
+                <i class="icon-prompts" aria-hidden="true"></i> Prompts
+            </a>
+        </li>
+        <li class="{% if request.resolver_match.url_name == 'chat_list' %}active{% endif %}">
+            <a href="{% url 'content:chat_list' %}" aria-label="Chats">
+                <i class="icon-chats" aria-hidden="true"></i> Chats
+            </a>
+        </li>
+        <li class="{% if request.resolver_match.url_name == 'image_list' %}active{% endif %}">
+            <a href="{% url 'content:image_list' %}" aria-label="Images">
+                <i class="icon-images" aria-hidden="true"></i> Images
+            </a>
+        </li>
+        <li class="{% if request.resolver_match.url_name == 'feed' %}active{% endif %}">
+            <a href="{% url 'home:feed' %}" aria-label="Explore">
+                <i class="icon-explore" aria-hidden="true"></i> Explore
+            </a>
+        </li>
+    </ul>
+</nav>
+
+---
+
+templates\snippets/
+    _delete.html
+<div class="container mt-3">
+    <h2>Are you sure you want to delete this {{ object_name }}?</h2>
+    <form method="POST">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Yes, delete</button>
+        <a href="{{ object_list_url }}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+
+---
+
+    _detail.html
+<div class="container mt-3">
+    <h2>{{ object.title }}</h2>
+    <p>{{ object.description }}</p>
+    <p>Target Date: {{ object.target_date }}</p>
+    
+    {% if object_name == "goal" %}
+        <a href="{% url 'goals:goal_update' object.id %}" class="btn btn-link">Edit</a>
+        <a href="{% url 'goals:goal_delete' object.id %}" class="btn btn-link text-danger">Delete</a>
+        <a href="{% url 'goals:goal_list' %}" class="btn btn-secondary">Back to List</a>
+    {% elif object_name == "artifact" %}
+        <a href="{% url 'artifacts:artifact_update' object.id %}" class="btn btn-link">Edit</a>
+        <a href="{% url 'artifacts:artifact_delete' object.id %}" class="btn btn-link text-danger">Delete</a>
+        <a href="{% url 'artifacts:artifact_list' %}" class="btn btn-secondary">Back to List</a>
+    {% endif %}
+</div>
+
+---
+
+    _form.html
+<form method="post" action="{{ action_url }}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">{{ button_text }}</button>
+</form>
+
+---
+
+    _loading_indicator.html
+<div id="loadingIndicator" class="d-flex justify-content-center align-items-center" style="display: none;">
+    <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const forms = document.querySelectorAll("form");
+        forms.forEach(form => {
+            form.addEventListener("submit", function(event) {
+                event.preventDefault();
+                const loadingIndicator = document.getElementById("loadingIndicator");
+                loadingIndicator.style.display = "flex";
+
+                const formData = new FormData(form);
+                fetch(form.action, {
+                    method: form.method,
+                    body: formData,
+                    headers: {
+                        'X-CSRFToken': form.querySelector('input[name="csrfmiddlewaretoken"]').value
+                    }
+                }).then(response => {
+                    loadingIndicator.style.display = "none";
+                    if (response.ok) {
+                        return response.json();
+                    } else {
+                        throw new Error('Network response was not ok');
+                    }
+                }).then(data => {
+                    console.log(data);
+                    // Handle success logic here
+                }).catch(error => {
+                    console.error('There has been a problem with your fetch operation:', error);
+                    // Handle error logic here
+                });
+            });
+        });
+
+        $(document).ajaxComplete(function() {
+            document.getElementById("loadingIndicator").style.display = "none";
+        });
+
+        $(document).ajaxError(function() {
+            document.getElementById("loadingIndicator").style.display = "none";
+        });
+    });
+</script>
+
+---
+
+    _preloader.html
+<!-- templates/snippets/_preloader.html -->
+<div id="preloader" class="pre-loader d-flex justify-content-center align-items-center">
+    <div class="pre-loader-box">
+        <div class="loader">
+            <div class="line-scale"></div>
+        </div>
+    </div>
+</div>
+
+---
+
+    _scripts.html
+<!-- Include GMaps library -->
+<script src="https://maps.google.com/maps/api/js?key=YOUR_API_KEY"></script>
+<script src="path/to/gmaps.js"></script>
+
+<!-- Include Morris library -->
+<link rel="stylesheet" href="path/to/morris.css">
+<script src="path/to/raphael-min.js"></script>
+<script src="path/to/morris.min.js"></script>
+
+<!-- Your custom scripts -->
+<script src="path/to/feedUpdate.js"></script>
+<script src="path/to/main.js"></script>
+<script src="path/to/chat_interactions.js"></script>
+<script src="path/to/donutChart.js"></script>
+<script src="path/to/feedFilter.js"></script>
+<script src="path/to/landing-specific-scripts.js"></script>
+<script src="path/to/themeToggle.js"></script>
+<script src="path/to/google-maps.js"></script>
+<script src="path/to/chart-morris-custom.js"></script>
+
+---
+
+templates\staticpages/
+    about.html
+<!-- templates/staticpages/about.html -->
+{% extends 'base/base_landing.html' %}
+{% block title %}About Us - YAYAY{% endblock %}
+{% block content %}
+<div class="container mt-3">
+    <h2>About Us</h2>
+    <p>At YAYAY, we are dedicated to [insert mission statement]. Our vision is to [insert vision statement], and we strive to achieve this by [insert methods or values].</p>
+    <section>
+        <h3>Our Mission</h3>
+        <p>We aim to [insert detailed mission statement].</p>
+    </section>
+    <section>
+        <h3>Our Vision</h3>
+        <p>We envision a world where [insert detailed vision statement].</p>
+    </section>
+    <section>
+        <h3>Our Values</h3>
+        <ul>
+            <li><strong>Integrity:</strong> We [insert value description].</li>
+            <li><strong>Innovation:</strong> We [insert value description].</li>
+            <li><strong>Customer-Centric:</strong> We [insert value description].</li>
+        </ul>
+    </section>
+</div>
+{% endblock %}
+
+---
+
+    blog.html
+<!-- templates/staticpages/blog.html -->
+{% extends 'base/base_landing.html' %}
+{% block title %}Blog - YAYAY{% endblock %}
+{% block content %}
+<div class="container mt-3">
+    <h2>Blog</h2>
+    <p>Stay updated with our latest news, articles, and insights. Explore a variety of topics written by our experts.</p>
+    <div class="row">
+        {% for post in blog_posts %}
+        <div class="col-md-4 mb-3">
+            <div class="card">
+                <img src="{{ post.image_url }}" class="card-img-top" alt="{{ post.title }}">
+                <div class="card-body">
+                    <h5 class="card-title">{{ post.title }}</h5>
+                    <p class="card-text">{{ post.excerpt }}</p>
+                    <a href="{% url 'blog_detail' post.slug %}" class="btn btn-primary">Read More</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% include "components/_pagination.html" with page_obj=page_obj %}
+</div>
+{% endblock %}
+
+---
+
+    contact.html
+<!-- templates/staticpages/contact.html -->
+{% extends 'base/base_landing.html' %}
+{% block title %}Contact Us - YAYAY{% endblock %}
+{% block content %}
+<div class="container mt-3">
+    <h2>Contact Us</h2>
+    <p>Have questions? Reach out to us through the following channels:</p>
+    <div class="row">
+        <div class="col-md-6">
+            <h3>Email</h3>
+            <p><a href="mailto:support@yayay.com">support@yayay.com</a></p>
+        </div>
+        <div class="col-md-6">
+            <h3>Phone</h3>
+            <p>+1 (123) 456-7890</p>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <h3>Contact Form</h3>
+            <form method="post" action="{% url 'contact' %}">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="name" class="form-label">Name</label>
+                    <input type="text" class="form-control" id="name" name="name" required>
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="email" name="email" required>
+                </div>
+                <div class="mb-3">
+                    <label for="message" class="form-label">Message</label>
+                    <textarea class="form-control" id="message" name="message" rows="5" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+---
+
+    faq.html
+<!-- templates/staticpages/faq.html -->
+{% extends 'base/base_landing.html' %}
+{% block title %}FAQs - YAYAY{% endblock %}
+{% block content %}
+<div class="container mt-3">
+    <h1>Frequently Asked Questions</h1>
+    <div class="accordion" id="accordionExample">
+        {% for faq in faqs %}
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="heading{{ forloop.counter }}">
+                <button class="accordion-button {% if not forloop.first %}collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ forloop.counter }}" aria-expanded="{% if forloop.first %}true{% else %}false{% endif %}" aria-controls="collapse{{ forloop.counter }}">
+                    {{ faq.question }}
+                </button>
+            </h2>
+            <div id="collapse{{ forloop.counter }}" class="accordion-collapse collapse {% if forloop.first %}show{% endif %}" aria-labelledby="heading{{ forloop.counter }}" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                    {{ faq.answer }}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+
+---
+
+    login.html
+<!-- templates/staticpages/login.html -->
+{% extends "base/base.html" %}
+
+{% block title %}Log In{% endblock %}
+
+{% block content %}
+<div class="container mt-3">
+    <h2>Log In</h2>
+    <p>Please enter your credentials to log in.</p>
+    <form method="post" action="{% url 'account_login' %}">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="username" class="form-label">Username</label>
+            <input type="text" class="form-control" id="username" name="username" required>
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" class="form-control" id="password" name="password" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Log In</button>
+    </form>
+    <p class="mt-3">Don't have an account? <a href="{% url 'account_signup' %}">Sign up here</a>.</p>
+</div>
+{% endblock %}
+
+---
+
+    pricing.html
+<!-- templates/staticpages/pricing.html -->
+{% extends 'base/base_landing.html' %}
+{% block title %}Pricing - YAYAY{% endblock %}
+{% block content %}
+<div class="container mt-3">
+    <h2>Pricing</h2>
+    <p>Choose the plan that best suits your needs.</p>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Basic Plan</h5>
+                    <p class="card-text">$10/month</p>
+                    <ul>
+                        <li>Feature 1</li>
+                        <li>Feature 2</li>
+                        <li>Feature 3</li>
+                    </ul>
+                    <a href="{% url 'subscribe_basic' %}" class="btn btn-primary">Subscribe</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Standard Plan</h5>
+                    <p class="card-text">$20/month</p>
+                    <ul>
+                        <li>Feature 1</li>
+                        <li>Feature 2</li>
+                        <li>Feature 3</li>
+                        <li>Feature 4</li>
+                    </ul>
+                    <a href="{% url 'subscribe_standard' %}" class="btn btn-primary">Subscribe</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Premium Plan</h5>
+                    <p class="card-text">$30/month</p>
+                    <ul>
+                        <li>Feature 1</li>
+                        <li>Feature 2</li>
+                        <li>Feature 3</li>
+                        <li>Feature 4</li>
+                        <li>Feature 5</li>
+                    </ul>
+                    <a href="{% url 'subscribe_premium' %}" class="btn btn-primary">Subscribe</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+---
+
+    privacy.html
+<!-- templates/staticpages/privacy.html -->
+{% extends 'base/base_landing.html' %}
+
+{% block title %}Privacy - YAYAY{% endblock %}
+
+{% block content %}
+<div class="container mt-3">
+    <h2>Privacy</h2>
+    <p>At YAYAY, we value your privacy and are committed to protecting your personal information. Our privacy policy outlines how we collect, use, and safeguard your data.</p>
+    <section>
+        <h3>Information We Collect</h3>
+        <p>We may collect personal information such as your name, email address, and payment details when you use our services.</p>
+    </section>
+    <section>
+        <h3>How We Use Your Information</h3>
+        <p>Your information is used to provide and improve our services, process transactions, and communicate with you.</p>
+    </section>
+    <section>
+        <h3>Security Measures</h3>
+        <p>We implement various security measures to ensure the safety of your personal information.</p>
+    </section>
+    <section>
+        <h3>Contact Us</h3>
+        <p>If you have any questions about our privacy policy, please contact us at <a href="mailto:privacy@yayay.com">privacy@yayay.com</a>.</p>
+    </section>
+</div>
+{% endblock %}
+
+---
+
+    register.html
+<!-- templates/staticpages/register.html -->
+{% extends "base/base.html" %}
+
+{% block title %}Register{% endblock %}
+
+{% block content %}
+<div class="container mt-3">
+    <h2>Register</h2>
+    <p>Create an account to access exclusive features and content.</p>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="username" class="form-label">Username</label>
+            <input type="text" class="form-control" id="username" name="username" required>
+        </div>
+        <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" class="form-control" id="email" name="email" required>
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" class="form-control" id="password" name="password" required>
+            <small id="passwordHelp" class="form-text text-muted">Make sure your password is strong.</small>
+        </div>
+        <div class="mb-3">
+            <label for="confirm_password" class="form-label">Confirm Password</label>
+            <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Register</button>
+    </form>
+    <p class="mt-3">Already have an account? <a href="{% url 'account_login' %}">Log in here</a>.</p>
+</div>
+{% endblock %}
+
+---
+
+    support.html
+<!-- templates/staticpages/support.html -->
+{% extends 'base/base_landing.html' %}
+{% block title %}Support - YAYAY{% endblock %}
+{% block content %}
+<div class="container mt-3">
+    <h2>Support</h2>
+    <p>If you need assistance, our support team is here to help. Reach out to us through any of the following channels:</p>
+    <div class="row">
+        <div class="col-md-6">
+            <h3>Email Support</h3>
+            <p>For any queries or issues, email us at <a href="mailto:support@yayay.com">support@yayay.com</a>.</p>
+        </div>
+        <div class="col-md-6">
+            <h3>Live Chat</h3>
+            <p>Chat with our support team in real-time. Click <a href="#">here</a> to start a live chat session.</p>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <h3>Support Form</h3>
+            <form method="post" action="{% url 'support' %}">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="name" class="form-label">Name</label>
+                    <input type="text" class="form-control" id="name" name="name" required>
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="email" name="email" required>
+                </div>
+                <div class="mb-3">
+                    <label for="message" class="form-label">Message</label>
+                    <textarea class="form-control" id="message" name="message" rows="5" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+---
+
+    terms.html
+<!-- templates/staticpages/terms.html -->
+{% extends 'base/base_landing.html' %}
+{% block title %}Terms - YAYAY{% endblock %}
+{% block content %}
+<div class="container mt-3">
+    <h2>Terms and Conditions</h2>
+    <p>Welcome to YAYAY. Please read our terms and conditions carefully before using our services.</p>
+    <section>
+        <h3>Introduction</h3>
+        <p>These terms and conditions govern your use of our website and services.</p>
+    </section>
+    <section>
+        <h3>Use of Services</h3>
+        <p>By using our services, you agree to comply with all applicable laws and regulations.</p>
+    </section>
+    <section>
+        <h3>Account Registration</h3>
+        <p>To access certain features, you may need to create an account. You are responsible for maintaining the confidentiality of your account information.</p>
+    </section>
+    <section>
+        <h3>Termination</h3>
+        <p>We reserve the right to terminate your account or access to our services at any time, without notice, for any reason.</p>
+    </section>
+    <section>
+        <h3>Contact Us</h3>
+        <p>If you have any questions about these terms, please contact us at <a href="mailto:terms@yayay.com">terms@yayay.com</a>.</p>
+    </section>
+</div>
+{% endblock %}
+
+---
+

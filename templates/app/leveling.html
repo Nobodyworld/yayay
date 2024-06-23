@@ -1,0 +1,54 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}
+    {% if mode == "list_attributes" %}Attributes List{% elif mode == "detail_attribute" %}Attribute: {{ attribute.name }}{% elif mode == "list_skills" %}Skills List{% elif mode == "detail_skill" %}Skill: {{ skill.name }}{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="container mt-3">
+    {% if mode == "list_attributes" %}
+        <h2>Attributes List</h2>
+        <ul class="list-group">
+            {% for attribute in attributes %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <a href="{% url 'leveling:attribute_detail' attribute.pk %}">{{ attribute.name }}</a>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+        <a href="{% url 'leveling:attribute_create' %}" class="btn btn-primary mt-3">Create New Attribute</a>
+
+    {% elif mode == "detail_attribute" %}
+        {% include "snippets/_detail.html" with object=attribute %}
+        <h3>Skills</h3>
+        <ul class="list-group">
+            {% for skill in skills %}
+                <li class="list-group-item">{{ skill.name }}</li>
+            {% endfor %}
+        </ul>
+
+    {% elif mode == "list_skills" %}
+        <h2>Skills List</h2>
+        <ul class="list-group">
+            {% for skill in skills %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <a href="{% url 'leveling:skill_detail' skill.pk %}">{{ skill.name }}</a>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+        <a href="{% url 'leveling:skill_create' %}" class="btn btn-primary mt-3">Create New Skill</a>
+
+    {% elif mode == "detail_skill" %}
+        {% include "snippets/_detail.html" with object=skill %}
+        <h3>Associated Attribute: {{ skill.attribute.name }}</h3>
+    {% endif %}
+</div>
+{% endblock content %}
+{% block scripts %}
+    {% include 'snippets/_loading_indicator.html' %}
+    <script src="{% static 'js/donutChart.js' %}"></script>
+{% endblock scripts %}

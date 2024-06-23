@@ -1,0 +1,13 @@
+3. **Subscription App:**
+   - **Purpose:** Manages subscriptions, payments, and financial interactions.
+   - **Includes:** Subscription, BillingRecord.
+   - **Changes:** Ensure integration with a secure payment gateway and compliance with financial regulations.
+
+  Manages paid subscriptions, billing, and user account financials.
+
+ - `Subscription`: Manages user subscriptions and service tiers.
+ - `BillingRecord`: Tracks billing transactions and history.
+
+  Options:
+  Free - no Prem features
+  Premium -$10.00 monthly.

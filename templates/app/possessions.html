@@ -1,0 +1,38 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}Possession Management{% endblock %}
+
+{% block content %}
+<div class="container mt-3">
+    {% if mode == "list" %}
+        <h2>My Possessions</h2>
+        <ul class="list-group">
+            {% for possession in possessions %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <a href="{% url 'possession_detail' possession.pk %}">{{ possession.name }}</a>
+                    </div>
+                    <div>
+                        <a href="{% url 'possession_update' possession.pk %}" class="btn btn-link">Edit</a>
+                        <a href="{% url 'possession_delete' possession.pk %}" class="btn btn-link text-danger">Delete</a>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+        <a href="{% url 'possession_create' %}" class="btn btn-primary mt-3">Add New Possession</a>
+    {% elif mode == "create" %}
+        {% include "snippets/_form.html" with title="Add Possession" button_text="Add Possession" %}
+    {% elif mode == "detail" %}
+        {% include "snippets/_detail.html" with object=possession %}
+    {% elif mode == "update" %}
+        {% include "snippets/_form.html" with title="Edit Possession" button_text="Update Possession" %}
+    {% elif mode == "delete" %}
+        {% include "snippets/_delete.html" with object_name="possession" object_list_url="{% url 'possession_list' %}" %}
+    {% endif %}
+</div>
+{% endblock content %}
+{% block scripts %}
+    {% include 'snippets/_loading_indicator.html' %}
+    {% include 'snippets/_scripts.html' %}
+{% endblock scripts %}

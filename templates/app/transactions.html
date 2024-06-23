@@ -1,0 +1,38 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}Transaction Management{% endblock %}
+
+{% block content %}
+<div class="container mt-3">
+    {% if mode == "list" %}
+        <h2>Transactions List</h2>
+        <ul class="list-group">
+            {% for transaction in transactions %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <a href="{% url 'transaction_detail' transaction.id %}">{{ transaction.title }}</a>
+                    </div>
+                    <div>
+                        <a href="{% url 'transaction_update' transaction.id %}" class="btn btn-link">Edit</a>
+                        <a href="{% url 'transaction_delete' transaction.id %}" class="btn btn-link text-danger">Delete</a>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+        <a href="{% url 'transaction_create' %}" class="btn btn-primary mt-3">Create New Transaction</a>
+    {% elif mode == "create" %}
+        {% include "snippets/_form.html" with title="Create Transaction" button_text="Create Transaction" %}
+    {% elif mode == "detail" %}
+        {% include "snippets/_detail.html" with object=transaction %}
+    {% elif mode == "update" %}
+        {% include "snippets/_form.html" with title="Edit Transaction" button_text="Update Transaction" %}
+    {% elif mode == "delete" %}
+        {% include "snippets/_delete.html" with object_name="transaction" object_list_url="{% url 'transaction_list' %}" %}
+    {% endif %}
+</div>
+{% endblock content %}
+{% block scripts %}
+    {% include 'snippets/_loading_indicator.html' %}
+    {% include 'snippets/_scripts.html' %}
+{% endblock scripts %}

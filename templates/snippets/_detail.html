@@ -1,0 +1,15 @@
+<div class="container mt-3">
+    <h2>{{ object.title }}</h2>
+    <p>{{ object.description }}</p>
+    <p>Target Date: {{ object.target_date }}</p>
+    
+    {% if object_name == "goal" %}
+        <a href="{% url 'goals:goal_update' object.id %}" class="btn btn-link">Edit</a>
+        <a href="{% url 'goals:goal_delete' object.id %}" class="btn btn-link text-danger">Delete</a>
+        <a href="{% url 'goals:goal_list' %}" class="btn btn-secondary">Back to List</a>
+    {% elif object_name == "artifact" %}
+        <a href="{% url 'artifacts:artifact_update' object.id %}" class="btn btn-link">Edit</a>
+        <a href="{% url 'artifacts:artifact_delete' object.id %}" class="btn btn-link text-danger">Delete</a>
+        <a href="{% url 'artifacts:artifact_list' %}" class="btn btn-secondary">Back to List</a>
+    {% endif %}
+</div>

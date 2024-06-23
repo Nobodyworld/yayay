@@ -1,0 +1,34 @@
+<nav class="sidebar" aria-label="Main navigation">
+    <ul class="list-unstyled">
+        <li class="{% if request.resolver_match.url_name == 'home' %}active{% endif %}">
+            <a href="{% url 'home:home' %}" aria-label="Home">
+                <i class="icon-home" aria-hidden="true"></i> Home
+            </a>
+        </li>
+        <li class="{% if request.resolver_match.url_name == 'personas_list' %}active{% endif %}">
+            <a href="{% url 'personas:personas_list' %}" aria-label="Personas">
+                <i class="icon-personas" aria-hidden="true"></i> Personas
+            </a>
+        </li>
+        <li class="{% if request.resolver_match.url_name == 'prompts_list' %}active{% endif %}">
+            <a href="{% url 'prompts:prompts_list' %}" aria-label="Prompts">
+                <i class="icon-prompts" aria-hidden="true"></i> Prompts
+            </a>
+        </li>
+        <li class="{% if request.resolver_match.url_name == 'chat_list' %}active{% endif %}">
+            <a href="{% url 'content:chat_list' %}" aria-label="Chats">
+                <i class="icon-chats" aria-hidden="true"></i> Chats
+            </a>
+        </li>
+        <li class="{% if request.resolver_match.url_name == 'image_list' %}active{% endif %}">
+            <a href="{% url 'content:image_list' %}" aria-label="Images">
+                <i class="icon-images" aria-hidden="true"></i> Images
+            </a>
+        </li>
+        <li class="{% if request.resolver_match.url_name == 'feed' %}active{% endif %}">
+            <a href="{% url 'home:feed' %}" aria-label="Explore">
+                <i class="icon-explore" aria-hidden="true"></i> Explore
+            </a>
+        </li>
+    </ul>
+</nav>

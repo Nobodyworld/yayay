@@ -1,0 +1,5 @@
+<!-- templates/components/_searchform.html -->
+<form action="{% url 'search' %}" method="get" class="d-flex">
+    <input type="text" name="q" class="form-control me-2" placeholder="Search..." value="{{ request.GET.q }}">
+    <button type="submit" class="btn btn-primary">Search</button>
+</form>

@@ -1,0 +1,59 @@
+{% extends "base/base.html" %}
+{% load static %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="content-wrapper body-section-1-background">
+    <section class="main-dashboard">
+        {% if content %}
+            <p>{{ content.content }}</p>
+            <div class="post-content body-section-2-background">
+                <h2>Create Post</h2>
+                <div class="post-buttons">
+                    <!-- Buttons for creating posts -->
+                </div>
+                <div id="postForms">
+                    <!-- Include forms for posting content -->
+                </div>
+            </div>
+            <div id="feedContainer" class="feed-container body-section-3-background">
+                <ul class="feed-list">
+                    <!-- Dynamic feed items will be loaded here based on the button pressed -->
+                </ul>
+            </div>
+        {% else %}
+            <p>No content available at the moment. Please check back later or visit our <a href="{% url 'home:home' %}">homepage</a>.</p>
+        {% endif %}
+    </section>
+    <section class="navigation-section">
+        <h1>Welcome to the Home Page</h1>
+        <div>
+            <h2>Navigate to:</h2>
+            <ul>
+                <li><a href="{% url 'content:content_home' %}">Content</a></li>
+                <li><a href="{% url 'personas:personas_list' %}">Personas</a></li>
+                <li><a href="{% url 'goals:goal_list' %}">Goals</a></li>
+                <li><a href="{% url 'artifacts:artifacts_list' %}">Artifacts</a></li>
+                <li><a href="{% url 'collectives:collectives_list' %}">Collectives</a></li>
+                <li><a href="{% url 'problems:identify_problems' %}">Problems</a></li>
+                <li><a href="{% url 'solutions:create_solution' %}">Solutions</a></li>
+                <li><a href="{% url 'metrics:analytics_dashboard' %}">Metrics</a></li>
+                <li><a href="{% url 'leveling:attributes_list' %}">Leveling</a></li>
+                <li><a href="{% url 'prompts:prompts_list' %}">Prompts</a></li>
+                <li><a href="{% url 'social:tag_list' %}">Social</a></li>
+                <li><a href="{% url 'transactions:earn_tokens' %}">Transactions</a></li>
+                {% if user.is_authenticated %}
+                    <li><a href="{% url 'users:profile' user_id=user.id %}">Users</a></li>
+                {% else %}
+                    <li><a href="{% url 'account_login' %}">Login</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </section>
+</div>
+{% endblock %}
+
+{% block scripts %}
+    {% include 'snippets/_loading_indicator.html' %}
+    {% include 'snippets/_scripts.html' %}
+{% endblock scripts %}

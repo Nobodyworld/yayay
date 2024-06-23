@@ -1,0 +1,21 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}All Feed{% endblock %}
+
+{% block content %}
+<div class="container mt-3">
+    <h2>All Feed</h2>
+    <ul class="list-group">
+        {% for item in feed_items %}
+            <li class="list-group-item">
+                {{ item.content }}
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock content %}
+{% block scripts %}
+    {% include 'snippets/_loading_indicator.html' %}
+    {% include 'snippets/_scripts.html' %}
+{% endblock scripts %}

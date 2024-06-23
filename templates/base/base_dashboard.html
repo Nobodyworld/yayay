@@ -1,0 +1,27 @@
+{% extends 'base/base.html' %}
+{% block head %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'css/dashboard-style.css' %}">
+    <script src="{% static 'js/dashboard-scripts.js' %}"></script>
+{% endblock head %}
+{% block pre_loader %}
+    {{ block.super }}
+{% endblock pre_loader %}
+{% block sidebar %}
+    {{ block.super }}
+{% endblock sidebar %}
+{% block header %}
+    {{ block.super }}
+{% endblock header %}
+{% block content %}
+    <div class="dashboard-content">
+        <div class="container mt-3">
+            <h2>Dashboard Overview</h2>
+            <p>Welcome to your dashboard. Here's a quick summary of what's going on.</p>
+        </div>
+    </div>
+{% endblock content %}
+{% block extra_js %}
+    {{ block.super }}
+    <script src="{% static 'js/additional-dashboard-scripts.js' %}"></script>
+{% endblock extra_js %}

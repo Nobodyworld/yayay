@@ -1,0 +1,47 @@
+<div id="loadingIndicator" class="d-flex justify-content-center align-items-center" style="display: none;">
+    <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const forms = document.querySelectorAll("form");
+        forms.forEach(form => {
+            form.addEventListener("submit", function(event) {
+                event.preventDefault();
+                const loadingIndicator = document.getElementById("loadingIndicator");
+                loadingIndicator.style.display = "flex";
+
+                const formData = new FormData(form);
+                fetch(form.action, {
+                    method: form.method,
+                    body: formData,
+                    headers: {
+                        'X-CSRFToken': form.querySelector('input[name="csrfmiddlewaretoken"]').value
+                    }
+                }).then(response => {
+                    loadingIndicator.style.display = "none";
+                    if (response.ok) {
+                        return response.json();
+                    } else {
+                        throw new Error('Network response was not ok');
+                    }
+                }).then(data => {
+                    console.log(data);
+                    // Handle success logic here
+                }).catch(error => {
+                    console.error('There has been a problem with your fetch operation:', error);
+                    // Handle error logic here
+                });
+            });
+        });
+
+        $(document).ajaxComplete(function() {
+            document.getElementById("loadingIndicator").style.display = "none";
+        });
+
+        $(document).ajaxError(function() {
+            document.getElementById("loadingIndicator").style.display = "none";
+        });
+    });
+</script>

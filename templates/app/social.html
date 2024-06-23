@@ -1,0 +1,38 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}Social Management{% endblock %}
+
+{% block content %}
+<div class="container mt-3">
+    {% if mode == "list" %}
+        <h2>Social List</h2>
+        <ul class="list-group">
+            {% for social in socials %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <a href="{% url 'social_detail' social.id %}">{{ social.title }}</a>
+                    </div>
+                    <div>
+                        <a href="{% url 'social_update' social.id %}" class="btn btn-link">Edit</a>
+                        <a href="{% url 'social_delete' social.id %}" class="btn btn-link text-danger">Delete</a>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+        <a href="{% url 'social_create' %}" class="btn btn-primary mt-3">Create New Social</a>
+    {% elif mode == "create" %}
+        {% include "snippets/_form.html" with title="Create Social" button_text="Create Social" %}
+    {% elif mode == "detail" %}
+        {% include "snippets/_detail.html" with object=social %}
+    {% elif mode == "update" %}
+        {% include "snippets/_form.html" with title="Edit Social" button_text="Update Social" %}
+    {% elif mode == "delete" %}
+        {% include "snippets/_delete.html" with object_name="social" object_list_url="{% url 'social_list' %}" %}
+    {% endif %}
+</div>
+{% endblock content %}
+{% block scripts %}
+    {% include 'snippets/_loading_indicator.html' %}
+    {% include 'snippets/_scripts.html' %}
+{% endblock scripts %}

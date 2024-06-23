@@ -1,0 +1,24 @@
+<!-- templates/includes/_breadcrumb.html -->
+<nav aria-label="breadcrumb" class="breadcrumb-container">
+    <ol class="breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList">
+        <li class="breadcrumb-item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+            <a href="{% url 'home:index' %}" itemprop="item">
+                <i class="fas fa-home" aria-hidden="true"></i>
+                <span itemprop="name">Home</span>
+            </a>
+            <meta itemprop="position" content="1" />
+        </li>
+        {% if parent %}
+        <li class="breadcrumb-item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+            <a href="{% url parent.url_name %}" itemprop="item">
+                <span itemprop="name">{{ parent|capfirst }}</span>
+            </a>
+            <meta itemprop="position" content="2" />
+        </li>
+        {% endif %}
+        <li class="breadcrumb-item active" aria-current="page" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+            <span itemprop="name">{{ segment|capfirst }}</span>
+            <meta itemprop="position" content="{% if parent %}3{% else %}2{% endif %}" />
+        </li>
+    </ol>
+</nav>

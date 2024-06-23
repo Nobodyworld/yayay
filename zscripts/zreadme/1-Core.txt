@@ -1,0 +1,160 @@
+1. **Core App:**
+   - **Purpose:** Manages foundational user-related functionalities.
+   - **Includes:** User, UserProfile, UserAchievements, UserLevel.
+   - **Changes:** No major changes required here as it serves as the backbone for user management.
+
+
+     User Management App. Handles user registration, authentication, profiles, and security.
+
+  - `User`: Extends Django’s default user, adding custom fields and methods.
+  - `UserProfile`: Detailed profile info, preferences, and settings.
+  - `UserAchievements`: Tracks achievements and milestones.
+  - `UserLevel`: Manages leveling system based on user activities.
+
+
+  A User has:
+- Personas: 
+- UserLevel: acheivement based leveling system
+- UserAcheivements: count based, engagement based acheivements for participation and activity over the life of a user. (private but not sensitive)
+- UserFollowers: can follow for notifications of user uploads that are public.
+- CreatorStats: Counts of all engagement like number of personas, chats, images, prompts, etc, created
+- ReaderStats: A metric that tracks the wordcount of all chats a user posts and assumes 80 percent of the total word count was read.
+- ReaderAssessments: We award 20 percent to reader stats based on user assessments which are questions we generate when the user selects Chat Assessments. (random id of user associated chats)
+- Profile: RecentPublicActivity, Featured Personas (4), Chats (4), Images (4), Prompts (4), UserLevel, CreatorStatsDetail, ReaderStatsDetail, UserFeed.
+- UserFeed: UserFeed for all public personas, chats, and images by posted, reprompted, or contributed.
+- UserPost: with, or without persona selected, UserFeed for UserFollowers and viewers
+- SearchFeed: by category, attribute/skill, Prompt:Completon Pairs, as well as select feed item for detail, reprompting and submission of a version with a persona, and commenting.
+- Comment: on any user shared public persona, chat, image, or prompt of personas they follow
+- Browse: PersonaFeed, ChatFeed, ImageFeed, PromptFeed
+- UpVotes, DownVote: on any user shared public persona, chat, image, or prompt
+- UserInventory: - UserInventory of PersonalPersonas, PersonalChats, PersonalImages, and PersonalPrompts
+
+A User has:
+- Personas: A collection of digital personas created and managed by the user.
+- UserLevel: An achievement-based leveling system that reflects the user's progression and engagement within the platform.
+- UserAchievements: Rewards and badges earned for participation and activity, tracking milestones and significant interactions.
+- UserFollowers: Other users who follow to receive notifications about new uploads and activities.
+- CreatorStats: Aggregated data showing the user's contributions, including numbers of personas created, chats initiated, images uploaded, and prompts responded to.
+- ReaderStats: Metrics that estimate engagement based on the total word count of chats posted, assuming 80% readership of content produced.
+- ReaderAssessments: Additional engagement points awarded based on user responses to system-generated questions related to their chat content.
+- Profile: Displays recent public activity, featured items such as personas, chats, images, and prompts, detailed views of Creator and Reader stats, and the current user level.
+- UserFeed: A personalized feed featuring updates from followed users and public contributions in personas, chats, and images.
+- UserPost: Capability to post content, with or without persona association, visible to followers and other viewers based on privacy settings.
+- SearchFeed: A dynamic search functionality that allows filtering content by category, attribute/skill, and prompt-completion pairs, with options for detail viewing, reprompting, and commenting.
+- Comment: Functionality to comment on any publicly shared content from followed users, including personas, chats, images, or prompts.
+- Browse: Ability to navigate through various feeds such as PersonaFeed, ChatFeed, ImageFeed, and PromptFeed.
+- UpVotes/DownVotes: Options to vote on publicly shared content to influence visibility and popularity.
+- UserInventory: A personal collection that includes all personas, chats, images, and prompts created or acquired by the user.
+
+
+
+### Review of Core App
+
+#### Admin Configurations
+**File: `core/admin.py`**
+
+The admin configurations are well-defined for `GlobalSettings`, `UserProfile`, and `User`. The configurations include list displays, search fields, and fieldsets for the `User` model, which extend the base `UserAdmin` to include the `is_premium` field.
+
+**Comments:**
+- The configurations are straightforward and include all necessary functionalities. No changes needed.
+
+#### App Configuration
+**File: `core/apps.py`**
+
+The app configuration is correctly set up with the `ready` method importing signals to connect signal handlers.
+
+**Comments:**
+- This setup ensures that signals are properly registered when the app is ready. No changes needed.
+
+#### Forms
+**File: `core/forms.py`**
+
+The forms for user creation and update are well-defined with custom validations and additional fields. The `CustomUserCreationForm` includes email validation to prevent duplicate entries. The `CustomUserUpdateForm` allows updating user profiles with fields for bio and profile picture.
+
+**Comments:**
+- The forms are comprehensive and include necessary validations. No changes needed.
+
+#### Middleware
+**File: `core/middleware.py`**
+
+The `AuthRedirectMiddleware` ensures that unauthenticated users are redirected to the login page unless they are accessing excluded paths.
+
+**Comments:**
+- The middleware is well-implemented with appropriate logging and path exclusion logic. No changes needed.
+
+#### Models
+**File: `core/models.py`**
+
+The `GlobalSettings`, `User`, and `UserProfile` models are well-defined. The `User` model extends `AbstractUser` to include additional fields for `is_premium` and `public_profile`. The `UserProfile` model includes fields for bio, birth date, location, and profile picture.
+
+**Comments:**
+- The models include necessary fields, relationships, and methods. The signal to create or update the user profile is correctly implemented. No changes needed.
+
+#### Signal Handlers
+**File: `core/signals.py`**
+
+The signal handlers ensure that a `UserProfile` is created or updated whenever a `User` instance is saved. The `send_welcome_email` function is a placeholder for sending welcome emails.
+
+**Comments:**
+- The signal handlers are correctly implemented with appropriate logging. The `send_welcome_email` function can be expanded to include actual email sending logic if needed.
+
+#### Tests
+**File: `core/tests.py`**
+
+The test cases cover creating users, validating URLs and image files, and ensuring that user profiles are created. The tests for URL and image validations are comprehensive.
+
+**Comments:**
+- The test cases are well-structured and cover essential functionalities. Additional test cases for edge scenarios can be added for completeness.
+
+#### URL Configurations
+**File: `core/urls.py`**
+
+The URL configurations include paths for signup, login, logout, profile views, updates, and password resets.
+
+**Comments:**
+- The URL patterns are correctly defined and map to appropriate views. No changes needed.
+
+#### Utilities
+**File: `core/utilities.py`**
+
+The utility functions include calculating user age, formatting usernames, and checking premium status.
+
+**Comments:**
+- The utility functions are useful and follow best practices. No changes needed.
+
+#### Validators
+**File: `core/validators.py`**
+
+The validators ensure that URLs are valid and image files meet size and format requirements.
+
+**Comments:**
+- The validators are correctly implemented with appropriate error handling. No changes needed.
+
+#### Views
+**File: `core/views.py`**
+
+The views handle user signup, profile viewing, updating, and premium content access. Error handling views for 404 and 500 errors are also included.
+
+**Comments:**
+- The views are well-implemented with necessary mixins and context handling. The `PremiumContentView` correctly restricts access based on user status. No changes needed.
+
+#### Management Commands
+**Files: `core/management/commands/fix_user_ref.py`, `import_skills.py`**
+
+The management commands include a script to fix user references and import skills from a JSON file.
+
+**Comments:**
+- The commands are useful for data management and follow best practices. Ensure that the paths and data formats are correctly configured for deployment environments.
+
+#### Migrations
+**File: `core/migrations/0001_initial.py`**
+
+The initial migration file sets up the database schema for `GlobalSettings`, `User`, and `UserProfile`.
+
+**Comments:**
+- The migration file is correctly generated and includes all necessary fields and relationships. No changes needed.
+
+### Summary
+The Core app is well-structured and aligns with best practices in Django development. It includes necessary functionalities for user management, profile handling, and global settings. The app is secure, with robust validations, signal handlers, and middleware for authentication. Test cases cover essential functionalities, and the app is well-documented with clear URL mappings and view logic.
+
+Overall, the Core app meets its purpose and is well-integrated with other components of the platform. It provides a solid foundation for managing users and their profiles, ensuring a seamless and secure user experience.

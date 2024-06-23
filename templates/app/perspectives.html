@@ -1,0 +1,38 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}Perspective Management{% endblock %}
+
+{% block content %}
+<div class="container mt-3">
+    {% if mode == "list" %}
+        <h2>Perspectives List</h2>
+        <ul class="list-group">
+            {% for perspective in perspectives %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <a href="{% url 'perspective_detail' perspective.id %}">{{ perspective.title }}</a>
+                    </div>
+                    <div>
+                        <a href="{% url 'perspective_update' perspective.id %}" class="btn btn-link">Edit</a>
+                        <a href="{% url 'perspective_delete' perspective.id %}" class="btn btn-link text-danger">Delete</a>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+        <a href="{% url 'perspective_create' %}" class="btn btn-primary mt-3">Create New Perspective</a>
+    {% elif mode == "create" %}
+        {% include "snippets/_form.html" with title="Create Perspective" button_text="Create Perspective" %}
+    {% elif mode == "detail" %}
+        {% include "snippets/_detail.html" with object=perspective %}
+    {% elif mode == "update" %}
+        {% include "snippets/_form.html" with title="Edit Perspective" button_text="Update Perspective" %}
+    {% elif mode == "delete" %}
+        {% include "snippets/_delete.html" with object_name="perspective" object_list_url="{% url 'perspective_list' %}" %}
+    {% endif %}
+</div>
+{% endblock content %}
+{% block scripts %}
+    {% include 'snippets/_loading_indicator.html' %}
+    {% include 'snippets/_scripts.html' %}
+{% endblock scripts %}

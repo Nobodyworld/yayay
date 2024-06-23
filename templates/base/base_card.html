@@ -1,0 +1,8 @@
+<div class="persona-card card">
+  <img src="{{ persona.image_path|default:'' }}" alt="{{ persona.name }}" class="card-img-top persona-image">
+  <div class="card-body">
+      <h3 class="card-title">{{ persona.name }}</h3>
+      <p class="card-text">{{ persona.description }}</p>
+      {% include 'components/persona/attributes.html' with attributes=persona.attributes %}
+  </div>
+</div>

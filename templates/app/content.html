@@ -1,0 +1,61 @@
+{% extends "base/base.html" %}
+{% block content %}
+<div class="container">
+    {% if mode == "list_chats" %}
+        <ul class="list-group">
+            {% for chat in chats %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5>{{ chat.persona.name }}</h5>
+                        <p>{{ chat.content }}</p>
+                    </div>
+                    <div>
+                        <a href="{% url 'content:chat_detail' chat.id %}" class="btn btn-link">View</a>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+        <a href="{% url 'content:create_chat' %}" class="btn btn-primary mt-3">Create New Chat</a>
+    {% elif mode == "create_chat" %}
+        {% include "snippets/_form.html" with action_url=action_url form=form button_text='Create Chat' %}
+    {% elif mode == "detail_chat" %}
+        {% include "snippets/_detail.html" with object=chat %}
+    {% elif mode == "list_images" %}
+        <ul class="list-group">
+            {% for image in images %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5>{{ image.persona.name }}</h5>
+                        <img src="{{ image.image.url }}" alt="{{ image.caption }}" style="max-width: 200px;">
+                        <p>{{ image.caption }}</p>
+                    </div>
+                    <div>
+                        <a href="{% url 'content:image_detail' image.id %}" class="btn btn-link">View</a>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+        <a href="{% url 'content:create_image' %}" class="btn btn-primary mt-3">Upload New Image</a>
+    {% elif mode == "create_image" %}
+        {% include "snippets/_form.html" with action_url=action_url form=form button_text='Upload Image' %}
+    {% elif mode == "detail_image" %}
+        {% include "snippets/_detail.html" with object=image %}
+    {% elif mode == "select" %}
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="persona_id">Select Persona:</label>
+                <select id="persona_id" name="persona_id" class="form-control">
+                    {% for persona in personas %}
+                        <option value="{{ persona.id }}">{{ persona.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Select</button>
+        </form>
+    {% endif %}
+</div>
+{% endblock content %}
+{% block scripts %}
+<!-- Add any additional scripts here -->
+{% endblock scripts %}

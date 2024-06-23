@@ -1,0 +1,56 @@
+<!-- templates/staticpages/pricing.html -->
+{% extends 'base/base_landing.html' %}
+{% block title %}Pricing - YAYAY{% endblock %}
+{% block content %}
+<div class="container mt-3">
+    <h2>Pricing</h2>
+    <p>Choose the plan that best suits your needs.</p>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Basic Plan</h5>
+                    <p class="card-text">$10/month</p>
+                    <ul>
+                        <li>Feature 1</li>
+                        <li>Feature 2</li>
+                        <li>Feature 3</li>
+                    </ul>
+                    <a href="{% url 'subscribe_basic' %}" class="btn btn-primary">Subscribe</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Standard Plan</h5>
+                    <p class="card-text">$20/month</p>
+                    <ul>
+                        <li>Feature 1</li>
+                        <li>Feature 2</li>
+                        <li>Feature 3</li>
+                        <li>Feature 4</li>
+                    </ul>
+                    <a href="{% url 'subscribe_standard' %}" class="btn btn-primary">Subscribe</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Premium Plan</h5>
+                    <p class="card-text">$30/month</p>
+                    <ul>
+                        <li>Feature 1</li>
+                        <li>Feature 2</li>
+                        <li>Feature 3</li>
+                        <li>Feature 4</li>
+                        <li>Feature 5</li>
+                    </ul>
+                    <a href="{% url 'subscribe_premium' %}" class="btn btn-primary">Subscribe</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

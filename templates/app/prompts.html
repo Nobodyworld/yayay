@@ -1,0 +1,38 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}Prompts Management{% endblock %}
+
+{% block content %}
+<div class="container mt-3">
+    {% if mode == "list" %}
+        <h2>Prompts List</h2>
+        <ul class="list-group">
+            {% for prompt in prompts %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <a href="{% url 'prompts:prompts_detail' prompt.id %}">{{ prompt.text }}</a>
+                    </div>
+                    <div>
+                        <a href="{% url 'prompts:prompts_update' prompt.id %}" class="btn btn-link">Edit</a>
+                        <a href="{% url 'prompts:prompts_delete' prompt.id %}" class="btn btn-link text-danger">Delete</a>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+        <a href="{% url 'prompts:prompts_create' %}" class="btn btn-primary mt-3">Create New Prompt</a>
+    {% elif mode == "create" %}
+        {% include "snippets/_form.html" with title="Create Prompt" button_text="Create Prompt" %}
+    {% elif mode == "detail" %}
+        {% include "snippets/_detail.html" with object=prompt %}
+    {% elif mode == "update" %}
+        {% include "snippets/_form.html" with title="Edit Prompt" button_text="Update Prompt" %}
+    {% elif mode == "delete" %}
+        {% include "snippets/_delete.html" with object_name="prompt" object_list_url=prompts_list_url %}
+    {% endif %}
+</div>
+{% endblock content %}
+{% block scripts %}
+    {% include 'snippets/_loading_indicator.html' %}
+    {% include 'snippets/_scripts.html' %}
+{% endblock scripts %}

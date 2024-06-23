@@ -1,0 +1,7 @@
+{% extends "base/base.html" %}
+
+{% block title %}Delete {{ object_name }}{% endblock %}
+
+{% block content %}
+    {% include "snippets/_delete.html" with object_name=object_name object_list_url=object_list_url %}
+{% endblock %}

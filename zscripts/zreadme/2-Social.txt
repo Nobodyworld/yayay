@@ -1,0 +1,23 @@
+2. **Social App (formerly Common):**
+   - **Purpose:** Handles all social interaction features across the platform.
+   - **Includes:** Comment, Like, Share, Follow.
+   - **Changes:** Rename from Common to Social for clearer context. Consider adding more interactive features like user tagging and notifications.
+
+
+ Manages social interactions like comments, likes, and shares.
+
+  - `Comment`: Linked to various content types for user comments.
+  - `Like`: Tracks likes on content.
+  - `Share`: Handles sharing of content across the platform or external sites.
+  - `Follow`: Manages user following relationships.
+
+  - **Purpose**: Manages interactions and engagements related to characters, such as leveling prompts and assessments.
+- **Models**:
+  - `CharacterInteraction`: Tracks and manages interactions specific to characters, like chat updates, image uploads, and prompt responses.
+- **Abstractions**:
+  - Abstract interaction methods that can be applied to various interaction types, ensuring a consistent approach to updating and responding to character interactions.
+- **Purpose**: Manages interactions between characters and users, such as comments, likes, or leveling interactions.
+- **Functions**:
+  - `record_interaction(user, character, type, details)`: Logs an interaction and updates any related statistics or achievements.
+  - `calculate_interaction_impact(character)`: Analyzes recent interactions to adjust character popularity or other metrics.
+  

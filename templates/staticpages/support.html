@@ -1,0 +1,40 @@
+<!-- templates/staticpages/support.html -->
+{% extends 'base/base_landing.html' %}
+{% block title %}Support - YAYAY{% endblock %}
+{% block content %}
+<div class="container mt-3">
+    <h2>Support</h2>
+    <p>If you need assistance, our support team is here to help. Reach out to us through any of the following channels:</p>
+    <div class="row">
+        <div class="col-md-6">
+            <h3>Email Support</h3>
+            <p>For any queries or issues, email us at <a href="mailto:support@yayay.com">support@yayay.com</a>.</p>
+        </div>
+        <div class="col-md-6">
+            <h3>Live Chat</h3>
+            <p>Chat with our support team in real-time. Click <a href="#">here</a> to start a live chat session.</p>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <h3>Support Form</h3>
+            <form method="post" action="{% url 'support' %}">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="name" class="form-label">Name</label>
+                    <input type="text" class="form-control" id="name" name="name" required>
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="email" name="email" required>
+                </div>
+                <div class="mb-3">
+                    <label for="message" class="form-label">Message</label>
+                    <textarea class="form-control" id="message" name="message" rows="5" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

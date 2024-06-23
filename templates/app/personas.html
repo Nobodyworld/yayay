@@ -1,0 +1,38 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}Personas Management{% endblock %}
+
+{% block content %}
+<div class="container mt-3">
+    {% if mode == "list" %}
+        <h2>Personas List</h2>
+        <ul class="list-group">
+            {% for persona in personas %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <a href="{% url 'personas:persona_detail' persona.id %}">{{ persona.name }}</a>
+                    </div>
+                    <div>
+                        <a href="{% url 'personas:update_persona' persona.id %}" class="btn btn-link">Edit</a>
+                        <a href="{% url 'personas:persona_delete' persona.id %}" class="btn btn-link text-danger">Delete</a>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+        <a href="{% url 'personas:create_persona' %}" class="btn btn-primary mt-3">Create New Persona</a>
+    {% elif mode == "create" %}
+        {% include "snippets/_form.html" with title="Create New Persona" button_text="Create" %}
+    {% elif mode == "detail" %}
+        {% include "snippets/_detail.html" with object=persona %}
+    {% elif mode == "update" %}
+        {% include "snippets/_form.html" with title="Edit Persona" button_text="Update Persona" %}
+    {% elif mode == "delete" %}
+        {% include "snippets/_delete.html" with object_name="persona" object_list_url=personas_list_url %}
+    {% endif %}
+</div>
+{% endblock content %}
+{% block scripts %}
+    {% include 'snippets/_loading_indicator.html' %}
+    {% include 'snippets/_scripts.html' %}
+{% endblock scripts %}

@@ -1,0 +1,76 @@
+/* Margin and Padding Utilities */
+.mt-0 { margin-top: 0; }
+.mb-0 { margin-bottom: 0; }
+.ml-0 { margin-left: 0; }
+.mr-0 { margin-right: 0; }
+.mt-1 { margin-top: var(--spacing-base); }
+.mb-1 { margin-bottom: var(--spacing-base); }
+.ml-1 { margin-left: var(--spacing-base); }
+.mr-1 { margin-right: var(--spacing-base); }
+.p-0 { padding: 0; }
+.pt-0 { padding-top: 0; }
+.pb-0 { padding-bottom: 0; }
+.pl-0 { padding-left: 0; }
+.pr-0 { padding-right: 0; }
+.p-1 { padding: var(--spacing-base); }
+.pt-1 { padding-top: var(--spacing-base); }
+.pb-1 { padding-bottom: var(--spacing-base); }
+.pl-1 { padding-left: var(--spacing-base); }
+.pr-1 { padding-right: var(--spacing-base); }
+
+/* Text Alignment Utilities */
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+.text-left { text-align: left; }
+
+/* Text Transformation Utilities */
+.text-uppercase { text-transform: uppercase; }
+.text-lowercase { text-transform: lowercase; }
+.text-capitalize { text-transform: capitalize; }
+
+/* Text Style Utilities */
+.text-bold { font-weight: bold; }
+.text-italic { font-style: italic; }
+
+/* Display Utilities */
+.d-block { display: block; }
+.d-inline { display: inline; }
+.d-inline-block { display: inline-block; }
+.d-none { display: none; }
+
+/* Flexbox Utilities */
+.flex-center { display: flex; align-items: center; justify-content: center; }
+.flex-column { display: flex; flex-direction: column; }
+.flex-row { display: flex; flex-direction: row; }
+.flex-wrap { display: flex; flex-wrap: wrap; }
+.flex-nowrap { display: flex; flex-wrap: nowrap; }
+.flex-grow-1 { flex-grow: 1; }
+.flex-shrink-0 { flex-shrink: 0; }
+
+/* Border Utilities */
+.border-0 { border: none; }
+.border-top-0 { border-top: none; }
+.border-right-0 { border-right: none; }
+.border-bottom-0 { border-bottom: none; }
+.border-left-0 { border-left: none; }
+
+/* Transition Utilities */
+.transition-standard { transition: transform 0.3s ease-in-out; }
+.transition-fast { transition: all 0.2s ease-in-out; }
+.transition-slow { transition: all 0.5s ease-in-out; }
+
+/* Property-specific Transition Utilities */
+.transition-opacity { transition: opacity 0.3s ease-in-out; }
+.transition-bg { transition: background-color 0.3s ease-in-out; }
+.transition-shadow { transition: box-shadow 0.3s ease-in-out; }
+
+/* Box Shadow Utilities */
+.box-shadow-standard { box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
+.box-shadow-hover { box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); }
+.box-shadow-large { box-shadow: 0 8px 12px rgba(0, 0, 0, 0.1); }
+
+/* Hover and Active State Utilities */
+.hover-bg-primary:hover { background-color: var(--primary-color); }
+.hover-bg-secondary:hover { background-color: var(--secondary-color); }
+.active-bg-primary:active { background-color: var(--primary-color); }
+.active-bg-secondary:active { background-color: var(--secondary-color); }

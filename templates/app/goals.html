@@ -1,0 +1,38 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}Goal Management{% endblock %}
+
+{% block content %}
+<div class="container mt-3">
+    {% if mode == "list" %}
+        <h2>Goals List</h2>
+        <ul class="list-group">
+            {% for goal in goals %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <a href="{% url 'goals:goal_detail' goal.id %}">{{ goal.title }}</a>
+                    </div>
+                    <div>
+                        <a href="{% url 'goals:goal_update' goal.id %}" class="btn btn-link">Edit</a>
+                        <a href="{% url 'goals:goal_delete' goal.id %}" class="btn btn-link text-danger">Delete</a>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+        <a href="{% url 'goals:goal_create' %}" class="btn btn-primary mt-3">Set New Goal</a>
+    {% elif mode == "create" %}
+        {% include "snippets/_form.html" with action_url="{% url 'goals:goal_create' %}" form=form button_text="Set Goal" %}
+    {% elif mode == "detail" %}
+        {% include "snippets/_detail.html" with object=goal %}
+    {% elif mode == "update" %}
+        {% include "snippets/_form.html" with action_url="{% url 'goals:goal_update' goal.id %}" form=form button_text="Update Goal" %}
+    {% elif mode == "delete" %}
+        {% include "snippets/_delete.html" with object_name="goal" object_list_url="{% url 'goals:goal_list' %}" %}
+    {% endif %}
+</div>
+{% endblock content %}
+{% block scripts %}
+    {% include 'snippets/_loading_indicator.html' %}
+    {% include 'snippets/_scripts.html' %}
+{% endblock scripts %}

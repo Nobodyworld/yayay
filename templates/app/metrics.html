@@ -1,0 +1,130 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}
+    {% if mode == "list_attributes" %}Attributes List{% elif mode == "detail_attribute" %}Attribute: {{ attribute.name }}{% elif mode == "list_skills" %}Skills List{% elif mode == "detail_skill" %}Skill: {{ skill.name }}{% elif mode == "list_metrics" %}Metrics List{% elif mode == "detail_metric" %}Metric: {{ skill_score.name }}{% elif mode == "analytics_dashboard" %}Analytics Dashboard{% elif mode == "detail_metrics" %}Metrics for {{ metrics.persona.name }}{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="container mt-3">
+    {% if mode == "list_attributes" %}
+        <h2>Attributes List</h2>
+        <ul class="list-group">
+            {% for attribute in attributes %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <a href="{% url 'attribute_detail' attribute.pk %}">{{ attribute.name }}</a>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+        <a href="{% url 'attribute_create' %}" class="btn btn-primary mt-3">Create New Attribute</a>
+
+    {% elif mode == "detail_attribute" %}
+        {% include "snippets/_detail.html" with object=attribute %}
+        <h3>Skills</h3>
+        <ul class="list-group">
+            {% for skill in skills %}
+                <li class="list-group-item">{{ skill.name }}</li>
+            {% endfor %}
+        </ul>
+        <h3>Tiers</h3>
+        <ul class="list-group">
+            {% for tier in tiers %}
+                <li class="list-group-item">{{ tier.name }}</li>
+            {% endfor %}
+        </ul>
+
+    {% elif mode == "list_skills" %}
+        <h2>Skills List</h2>
+        <ul class="list-group">
+            {% for skill in skills %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <a href="{% url 'skill_detail' skill.pk %}">{{ skill.name }}</a>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+        <a href="{% url 'skill_create' %}" class="btn btn-primary mt-3">Create New Skill</a>
+
+    {% elif mode == "detail_skill" %}
+        {% include "snippets/_detail.html" with object=skill %}
+        <h3>Tiers</h3>
+        <ul class="list-group">
+            {% for tier in tiers %}
+                <li class="list-group-item">{{ tier.name }}</li>
+            {% endfor %}
+        </ul>
+        <h3>Upvotes</h3>
+        <ul class="list-group">
+            {% for upvote in upvotes %}
+                <li class="list-group-item">{{ upvote.user.username }}</li>
+            {% endfor %}
+        </ul>
+        <h3>Ratings</h3>
+        <ul class="list-group">
+            {% for rating in ratings %}
+                <li class="list-group-item">{{ rating.value }}</li>
+            {% endfor %}
+        </ul>
+
+    {% elif mode == "list_metrics" %}
+        <h2>Metrics List</h2>
+        <ul class="list-group">
+            {% for skill_score in skill_scores %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <a href="{% url 'metrics_detail' skill_score.pk %}">{{ skill_score.name }}</a>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+
+    {% elif mode == "detail_metric" %}
+        {% include "snippets/_detail.html" with object=skill_score %}
+        <h3>Tiers</h3>
+        <ul class="list-group">
+            {% for tier in tiers %}
+                <li class="list-group-item">{{ tier.name }}</li>
+            {% endfor %}
+        </ul>
+        <h3>Upvotes</h3>
+        <ul class="list-group">
+            {% for upvote in upvotes %}
+                <li class="list-group-item">{{ upvote.user.username }}</li>
+            {% endfor %}
+        </ul>
+        <h3>Ratings</h3>
+        <ul class="list-group">
+            {% for rating in ratings %}
+                <li class="list-group-item">{{ rating.value }}</li>
+            {% endfor %}
+        </ul>
+
+    {% elif mode == "analytics_dashboard" %}
+        <h2>Analytics Dashboard</h2>
+        <ul class="list-group">
+            {% for metric in metrics %}
+                <li class="list-group-item">{{ metric.persona.name }} - {{ metric.total_points }}</li>
+            {% endfor %}
+        </ul>
+
+    {% elif mode == "detail_metrics" %}
+        {% include "snippets/_detail.html" with object=metrics.persona %}
+        <p>Social Count: {{ metrics.social_count }}</p>
+        <p>Achievement Points: {{ metrics.achievement_points }}</p>
+        <p>Total Points: {{ metrics.total_points }}</p>
+        <p>Total Attempts: {{ metrics.total_attempts }}</p>
+        <p>Highest Score: {{ metrics.highest_score }}</p>
+        <p>Last Updated: {{ metrics.last_updated }}</p>
+        <p>Average Rating: {{ metrics.average_rating }}</p>
+        <p>Total Upvotes: {{ metrics.total_upvotes }}</p>
+        <p>Total Downvotes: {{ metrics.total_downvotes }}</p>
+    {% endif %}
+</div>
+{% endblock content %}
+{% block scripts %}
+    {% include 'snippets/_loading_indicator.html' %}
+    {% include 'snippets/_scripts.html' %}
+{% endblock scripts %}
